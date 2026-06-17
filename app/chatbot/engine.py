@@ -183,17 +183,14 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
         return get_faq_card(payload)
 
     # Trigger support ticket creation
-    if payload == "RESOLVED_NO" or text.lower() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support"]:
-        # Transition to Ticket Creation Flow
-        session = await redis_manager.update_session(
-            user_id,
-            flow="ticket_creation",
-            step="awaiting_ticket_name",
-            context_update={"original_flow": flow}
-        )
+    if payload == "RESOLVED_NO" or text.lower() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support", "create support ticket"]:
+        await redis_manager.clear_session(user_id)
         return build_chat_response(
-            text="Please type your Full Name to log the support ticket:",
-            buttons=[{"title": "Cancel and return", "payload": "MAIN_MENU"}]
+            text="Please click the button below to open the support portal in your browser.",
+            buttons=[
+                {"title": "Open Support Portal", "payload": "https://www.c-zentrix.com/"},
+                {"title": "Back to Main Menu", "payload": "MAIN_MENU"}
+            ]
         )
 
     # ==========================================
@@ -208,17 +205,30 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             return get_menu_card(CARDS_MENU)
         elif payload == "FLOW_KYC":
             return build_chat_response(
-                text="To update Mobile Number, Email, Address etc:\n\nPlease submit:\n\nCustomer Information Change Form\nCustomer Information Update Form\nmBoB Change Request Form\n\nIf abroad:\nEmail forms to:\n📧 operations@bob.bt\n📧 mbob@bob.bt",
+                text="""**Update your Latest KYC (Mobile, Email, Address, etc.)**
+
+To keep your details updated with the bank, please fill in the following forms and submit them at your nearest branch:
+1. **Customer Information Change Form**
+2. **Customer Information Update Form**
+3. **mBoB Change Request Form**
+
+**If you are abroad:**
+- Please email the first two forms (**Customer Information Change & Update Forms**) to 📧 operations@bob.bt
+- Please email the **mBoB Change Request Form** to 📧 mbob@bob.bt
+*(Note: Please send the emails from your registered email address).*
+""",
                 buttons=[
-                    {"title": "Download Forms", "payload": "FLOW_DOWNLOAD_FORMS"},
+                    {"title": "Open Website", "payload": "https://www.bob.bt/"},
                     {"title": "Back Menu", "payload": "MAIN_MENU"}
                 ]
             )
         elif payload == "FLOW_DOWNLOAD_FORMS":
             return build_chat_response(
-                text="Please click below link to download forms.\n\nRedirect URL:\nBank of Bhutan Download Forms Page (https://www.bob.bt/downloads/)",
+                text="""**Download Forms**
+
+To download forms, please click the link below:""",
                 buttons=[
-                    {"title": "Open Website", "payload": "OPEN_WEBSITE_REDIRECT"},
+                    {"title": "Download Forms", "payload": "https://www.bob.bt/service-and-support/download-forms/"},
                     {"title": "Back Menu", "payload": "MAIN_MENU"}
                 ]
             )

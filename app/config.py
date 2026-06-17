@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"
     CELERY_RESULT_BACKEND: str = "redis://localhost:6379/0"
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = 8088
     DEBUG: bool = True
 
     class Config:

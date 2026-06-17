@@ -61,6 +61,10 @@ function handleEnterKey(event) {
 
 // Action button / postback button press handler
 function handleActionButton(title, payload) {
+    if (payload && (payload.startsWith("http://") || payload.startsWith("https://"))) {
+        window.open(payload, "_blank");
+        return;
+    }
     appendBubble("user", title);
     quickRepliesContainer.innerHTML = "";
     
@@ -69,6 +73,10 @@ function handleActionButton(title, payload) {
 
 // Quick reply pill click handler
 function handleQuickReply(title, payload) {
+    if (payload && (payload.startsWith("http://") || payload.startsWith("https://"))) {
+        window.open(payload, "_blank");
+        return;
+    }
     appendBubble("user", title);
     quickRepliesContainer.innerHTML = "";
     
@@ -208,6 +216,12 @@ function formatMarkdown(text) {
     // Bullet formats
     html = html.replace(/•\s(.*?)(<br>|$)/g, "<li>$1</li>");
     html = html.replace(/-\s(.*?)(<br>|$)/g, "<li>$1</li>");
+    
+    // 1. Parse markdown links [text](url)
+    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">$1</a>');
+    
+    // 2. Convert raw URLs to links (excluding those already inside href or parenthesis)
+    html = html.replace(/(?<!href=\")(?<!href=\')(?<!\()(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">$1</a>');
     
     return html;
 }

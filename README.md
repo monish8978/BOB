@@ -30,9 +30,9 @@ docker-compose up --build -d
 ```
 
 ### Accessing the Web Services
-- **Control Center & Interactive Simulator**: [http://localhost:8000](http://localhost:8000)
-- **FastAPI OpenAPI Documentation**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **Health Check Probe**: [http://localhost:8000/health](http://localhost:8000/health)
+- **Control Center & Interactive Simulator**: [http://localhost:8088](http://localhost:8088)
+- **FastAPI OpenAPI Documentation**: [http://localhost:8088/docs](http://localhost:8088/docs)
+- **Health Check Probe**: [http://localhost:8088/health](http://localhost:8088/health)
 
 ---
 
@@ -91,7 +91,7 @@ You can interact with the chatbot engine, retrieve ticket audits, and view conve
 This endpoint simulates sending user messages or button clicks to the state machine engine:
 
 ```bash
-curl -X POST "http://localhost:8000/api/simulate" \
+curl -X POST "http://localhost:8088/api/simulate" \
      -H "Content-Type: application/json" \
      -d '{
        "user_id": "BOB-USER-99",
@@ -104,19 +104,19 @@ curl -X POST "http://localhost:8000/api/simulate" \
 Fetches all tickets logged in the database by background Celery worker threads:
 
 ```bash
-curl -X GET "http://localhost:8000/api/tickets"
+curl -X GET "http://localhost:8088/api/tickets"
 ```
 
 ### 3. Fetch Conversation Audit Logs
 Retrieve the complete conversation message stream for a specific session:
 
 ```bash
-curl -X GET "http://localhost:8000/api/logs/BOB-USER-99"
+curl -X GET "http://localhost:8088/api/logs/BOB-USER-99"
 ```
 
 ### 4. Reset User Session State
 Clears active Redis session states and deletes transactional message logs for clean validation tests:
 
 ```bash
-curl -X POST "http://localhost:8000/api/reset/BOB-USER-99"
+curl -X POST "http://localhost:8088/api/reset/BOB-USER-99"
 ```

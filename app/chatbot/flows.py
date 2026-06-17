@@ -9,10 +9,10 @@ MAIN_MENU = {
         {"title": "Update Latest KYC", "payload": "FLOW_KYC"},
         {"title": "Download Forms", "payload": "FLOW_DOWNLOAD_FORMS"},
         {"title": "GoBoB", "payload": "FLOW_GOBOB"},
-        {"title": "Annual Travel Scheme (ATS)", "payload": "FLOW_ATS"},
+        {"title": "Annual Travel (ATS)", "payload": "FLOW_ATS"},
         {"title": "BOB Account Opening", "payload": "FLOW_LOANS_ACCTS"},
         {"title": "BOB Loan Apply Online", "payload": "FLOW_LOAN_APPLY"},
-        {"title": "Create Ticket / Talk to Support", "payload": "RESOLVED_NO"},
+        {"title": "Create Support Ticket", "payload": "RESOLVED_NO"},
     ]
 }
 
@@ -22,10 +22,10 @@ MBOB_MENU = {
     "buttons": [
         {"title": "Registration", "payload": "MBOB_REGISTRATION"},
         {"title": "Login Access Blocked", "payload": "MBOB_LOGIN_BLOCKED"},
-        {"title": "Fund Transfer Failed to Other Banks", "payload": "MBOB_TX_FAILED"},
+        {"title": "Interbank Transfer Fail", "payload": "MBOB_TX_FAILED"},
         {"title": "Device Change", "payload": "MBOB_DEVICE_CHANGE"},
         {"title": "Fund Transfer Limit", "payload": "MBOB_LIMIT"},
-        {"title": "Check/Change Fund Transfer Category", "payload": "MBOB_CATEGORY"}
+        {"title": "Check/Change Category", "payload": "MBOB_CATEGORY"}
     ]
 }
 
@@ -43,7 +43,7 @@ CARDS_MENU = {
 CREDIT_CARD_MENU = {
     "text": "Please select your credit card concern.",
     "buttons": [
-        {"title": "Unauthorized/Fraud Transactions", "payload": "CC_FRAUD"},
+        {"title": "Unauthorized/Fraud Txn", "payload": "CC_FRAUD"},
         {"title": "Eligibility", "payload": "CC_ELIGIBILITY"},
         {"title": "Types of Credit Card", "payload": "CC_TYPES"},
         {"title": "Issuance Fee", "payload": "CC_ISSUANCE_FEE"},
@@ -81,6 +81,7 @@ GOBOB_MENU = {
         {"title": "What is GoBoB", "payload": "GOBOB_FAQ_WHAT"},
         {"title": "Login Access Blocked", "payload": "GOBOB_BLOCKED"},
         {"title": "Registration", "payload": "GOBOB_REG"},
+        {"title": "How to register", "payload": "GOBOB_HOW_TO_REG"},
         {"title": "Registration for Tourist", "payload": "GOBOB_TOURIST"},
         {"title": "KYC Verification", "payload": "GOBOB_KYC"},
         {"title": "Lost Device Block", "payload": "GOBOB_LOST"},
@@ -112,7 +113,19 @@ ATS_MENU = {
 FAQS = {
     # mBoB Registration Information
     "MBOB_REGISTRATION": {
-        "text": "An account with Bank of Bhutan and registered Mobile/Email address is required to avail this service.\nFor thumb print account, please visit nearest BoB branch for registration.\n\nFor accounts with signature, follow below steps:\n\nTap Sign-Up option on mBoB app\nEnter:\nBoB Account Number\nCID / License / Work Permit / Passport Number\nClick Submit\nAccept Terms & Conditions\nOTP will be sent to registered mobile & email\nEnter OTP\nUser ID & MPIN will be generated.",
+        "text": """**Registration**
+
+An account with Bank of Bhutan and a registered Mobile/Email address is required to avail this service.
+
+* **Thumb Print Accounts**: Please visit the nearest BoB branch for registration.
+* **Signature Accounts**: Please register from the mBoB app by following the below steps:
+
+1. Tap **"Sign-Up"** option on the main mBoB app screen.
+2. Enter your **BoB Account Number** and your **CID/License/Work Permit/Passport number** registered with the bank and tap **"Submit"**.
+   *Note: You will need to agree to the mBoB Terms and Conditions to use the app.*
+3. An **OTP** will be sent to the registered email ID and mobile number for confirmation.
+4. Enter the **OTP** received and proceed.
+5. Your **mBoB User ID** and **MPIN (Login PIN)** will be sent to you.""",
         "buttons": [
             {"title": "Back to mBoB Menu", "payload": "FLOW_MBOB"},
             {"title": "Create Ticket", "payload": "RESOLVED_NO"}
@@ -121,7 +134,19 @@ FAQS = {
     
     # mBoB Login Access Blocked
     "MBOB_LOGIN_BLOCKED": {
-        "text": "To reset MPIN or unblock login access:\n\nOpen mBoB App\nTap Forgot option\nEnter:\nUser ID\nRegistered Mobile Number\nCID Number\nOTP will be sent on registered email/mobile\nEnter OTP\nNew MPIN will be sent\nLogin using New MPIN\nSet new MPIN.",
+        "text": """**Login Access Blocked**
+
+To reset MPIN or unblock login access to mBoB:
+
+1. **Open mBoB App**
+2. Tap **"Forgot"** option on the login page
+3. Enter your **User ID, Registered Mobile number and CID Number** and Submit. (An OTP will be sent to your registered email address and mobile number)
+4. Enter the **OTP** received via SMS or email to reset your MPIN
+5. A **new MPIN** will be sent to your registered email address and mobile number
+6. Enter the **New MPIN** received on the main login page
+7. Once done, it will take you to the **"Reset M-PIN"** page where you will have to enter the MPIN received on the **"Enter Default M-PIN"** field.
+8. On the **"New M-PIN"** field, enter the PIN of your choice and repeat the same on **"Confirm New M-PIN"**
+9. Your M-PIN will be successfully reset.""",
         "buttons": [
             {"title": "Still Facing Issue", "payload": "RESOLVED_NO"},
             {"title": "Back Menu", "payload": "FLOW_MBOB"}
@@ -130,7 +155,7 @@ FAQS = {
     
     # mBoB Fund Transfer Failed to Other Banks
     "MBOB_TX_FAILED": {
-        "text": "As per RMA and force credit policy, all interbank failed transactions are credited to beneficiary account on the next working day if beneficiary account is valid and active.",
+        "text": "As per the RMA and force credit policy, all interbank failed transactions will be credited to the beneficiary’s account on the next working day if the beneficiary account is valid and active. Hence please allow us time for the payment to process.",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
             {"title": "Back Menu", "payload": "FLOW_MBOB"}
@@ -139,7 +164,7 @@ FAQS = {
     
     # mBoB Device Change
     "MBOB_DEVICE_CHANGE": {
-        "text": "An mBoB user can only access mBoB from one device at a time.\n\nIf changed device:\n\nWithin Bhutan\n📞 1095\n\nOutside Bhutan\n📞 +975-2-349903\n\n📧 mbob@bob.bt",
+        "text": "An individual mBoB user can only access mBoB from one device at a time. If you have changed your device and wish to access mBoB on a new device, please call us at our Toll-Free Number 1095 (Within Bhutan) or visit the nearest BoB branch. For customers residing abroad, please call us at 📞 +975-2-349903 or email the duly filled mBoB Change Request form to 📧 mbob@bob.bt",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
             {"title": "Back Menu", "payload": "FLOW_MBOB"}
@@ -148,7 +173,21 @@ FAQS = {
     
     # mBoB Fund Transfer Limit
     "MBOB_LIMIT": {
-        "text": "Within BoB Accounts\n\nGold Category: Unlimited\nSilver Category: Nu.500,000/day\nGeneral Category: Nu.100,000/day\n\nThumbprint Account\n\nDaily Limit: Nu.5,000\nTransaction Limit: Nu.3,000\n\nOther Banks\n\nNu.1 Million/day",
+        "text": """**Fund Transfer Limit**
+
+Following are the limit details for fund transfers:
+
+1. **Within BoB Accounts (Accounts with Signature)**: Unlimited. However, it depends on your mBoB Category:
+   - **Gold Category**: Unlimited
+   - **Silver Category**: Nu. 500,000 (Daily Limit)
+   - **General Category**: Nu. 100,000 (Daily Limit)
+
+2. **Within BoB Accounts (Thumbprint Account)**:
+   - **Daily Limit**: Nu. 5,000
+   - **Transaction Limit**: Nu. 3,000
+
+3. **BoB to Other Banks**:
+   - **Daily Limit**: Nu. 1 Million per day (as per RMA guidelines)""",
         "buttons": [
             {"title": "Back Menu", "payload": "FLOW_MBOB"}
         ]
@@ -161,44 +200,54 @@ FAQS = {
             {"title": "Back Menu", "payload": "FLOW_MBOB"}
         ]
     },
-
     # CREDIT CARD SPECS
     "CC_FRAUD": {
-        "text": "Unauthorized or Fraud Transactions\n\nIf you notice any unauthorized or fraud transaction on your Credit Card, please lock it immediately via mBoB app or call 1095 to block the card permanently.",
+        "text": "To prevent unauthorized or fraudulent activity, cardholders may immediately block their card via mBoB or request a card replacement.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_ELIGIBILITY": {
-        "text": "Credit Card Eligibility\n\nMust be a Bhutanese citizen or resident between 18 and 65 years of age, holding an active account with Bank of Bhutan showing stable source of income.",
+        "text": "Any Bhutanese between the age of 18 to 70 years with a legitimate repayment source. Salaried employees with minimum net take home pay of Nu.10,040/-.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_TYPES": {
-        "text": "Types of Credit Card\n\nWe offer Gold, Silver, and Classic Credit Cards, tailored for local, domestic, and international usage limits.",
+        "text": """**Types of Credit Cards**
+
+* **Visa Domestic Credit card**: Valid in Bhutan, India & Nepal.
+* **Visa International Credit card**: Valid outside Bhutan, India & Nepal.
+* **Corporate Credit card**: Valid in all countries.""",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_ISSUANCE_FEE": {
-        "text": "Issuance Fee\n\nCredit Card Issuance Fee:\n- Classic Card: Nu. 500\n- Silver Card: Nu. 1,000\n- Gold Card: Nu. 1,500",
+        "text": "The issuance Fee of credit card is Nu.525 Per Card.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_ANNUAL_FEE": {
-        "text": "Annual Fee\n\nCredit Card Annual Maintenance Fee is Nu. 1,000 for standard accounts, charged at the end of every calendar year.",
+        "text": "The credit card will be charged with Nu.1048.95 annually as annual Fee.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_REPLACEMENT_FEE": {
-        "text": "Replacement/Renewal Fee\n\nCard replacement or renewal due to damage, loss, or expiry is Nu. 500.",
+        "text": "The Fee for Credit card Replacement/Renewal is Nu.315 Per Card. You can apply this using mBoB.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_LIMIT": {
-        "text": "Credit Card Limit\n\nYour credit card limit is determined during credit analysis based on income tax returns and salary statements.",
+        "text": "The Maximum Card limit is up to Nu.150,000/-. You can increase your card limit against a collateral such as fixed assets, lien against deposit in CASA account, Fixed Deposit or Recurring Deposit account.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_BILL": {
-        "text": "Credit Card Bill\n\nBills are generated on a monthly cycle. You can pay your outstanding amount via standing instruction (ATS) or manually through mBoB.",
+        "text": """There are two payment options:
+1. **FAD (Full Amount Due)**: Total Due amount.
+2. **MAD (Minimum Amount Due)**: 10% of the FAD.
+
+The cardholder can either opt to pay FAD or MAD. The cardholder can make the re-payment through mBoB or Choose for Auto debit (SI) from Savings account.""",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     
     # Credit Card Block
     "CC_BLOCK": {
-        "text": "To block your card:\n\nCall 1095\n\nOR\n\nLogin mBoB → Cards → Select Card → Manage Card → Card Controls → Turn OFF ATM/POS/Online transaction.",
+        "text": """To block your credit card, call **1095** or send email to **creditcard@bob.bt**.
+
+However, transaction controls can be turned OFF/ON via mBoB:
+Login to mBoB app > select cards > select card > manage card > card controls > turn off the toggle switch for ATM/Online/POS. Your credit card will be temporarily blocked for further transactions.""",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
             {"title": "Back Menu", "payload": "CARD_CREDIT"}
@@ -207,7 +256,9 @@ FAQS = {
     
     # Credit Card Activate
     "CC_ACTIVATE": {
-        "text": "Login mBoB → Cards → Credit Card → Activate → Set Card PIN → Submit.",
+        "text": """You can activate your new/ replaced issued credit cards using the mBoB app.
+
+To activate the card, login to mBoB > select cards > credit card > activate > set card pin > enter four-digit pin of your choice > submit.""",
         "buttons": [
             {"title": "Back Menu", "payload": "CARD_CREDIT"}
         ]
@@ -215,37 +266,61 @@ FAQS = {
 
     # DEBIT CARD SPECS
     "DC_ISSUANCE_FEE": {
-        "text": "Card Issuance Fee\n\nStandard Debit Card issuance fee is Nu. 250 upon first time account creation.",
+        "text": "The issuance Fee of debit card is Nu.315 Per Card.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_REPLACEMENT_FEE": {
-        "text": "Replacement/Renewal Fee\n\nReplacement of lost, stolen, or damaged Debit Card is Nu. 250.",
+        "text": "The Fee for debit card Replacement/Renewal is Nu.315 Per Card. You can apply this using mBoB.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_FRAUD": {
-        "text": "Fraud Transaction\n\nIn case of suspected fraud on your Debit Card, lock it instantly via mBoB app or call 1095 for instant permanent block.",
+        "text": "To prevent unauthorized or fraudulent activity, cardholders may immediately block their card via mBoB or request a card replacement.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_TYPES": {
-        "text": "Card Types\n\nWe provide standard RuPay, Visa, and Mastercard Debit Cards for domestic and international ATM/POS transactions.",
+        "text": """**Types of Debit Cards**
+
+* **Proprietary Debit card**: Valid within Bhutan only.
+* **Visa Domestic debit card**: Valid in Bhutan, India & Nepal.
+* **Visa International debit card (Public)**: Valid outside Bhutan, India & Nepal.
+* **Visa International debit card (Student)**: Valid outside Bhutan, India & Nepal. The student card is issued to suffice your living expenses abroad. Therefore, upon issuance of the card, bank will not remit or bank transfer your monthly living allowance and vice versa. Card validity is based on applicant student’s study period up to 4 years.
+
+**Documentation required for Visa International Debit Card (Student)**:
+* Valid passport copy
+* Duly filled application or renewal forms
+* University admission/enrollment letter
+* Valid visa/permits""",
         "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_ELIGIBILITY": {
-        "text": "Eligibility\n\nAll active Savings and Current Account holders are automatically eligible to apply for a Debit Card.",
+        "text": """**Eligibility criteria for Debit Cards**:
+
+* **Domestic Debit Card**: All savings bank account holders with BoB and account with Individual, Either or Survivor (E or S) are eligible. Thumb impression/Joint account holders & Non-Bhutanese Nationals are **NOT ELIGIBLE**.
+* **International Debit Card**: All savings bank account holders with BoB and account with Either or Survivor (E or S) are eligible. Thumb impression/Joint account holders are **NOT ELIGIBLE**.""",
         "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_LIMIT": {
-        "text": "Withdrawal Limit\n\nMaximum daily ATM cash withdrawal limit is Nu. 40,000.",
+        "text": """**Withdrawal & POS Limits**:
+
+**Domestic Debit Card**:
+Cardholders may utilize funds up to their available account balance, subject to the transaction limits below.
+* **Cash Withdrawal**: Nu. 15,000 per transaction. Up to Nu.40,000 per day in BoB ATMs & Nu.30,000 per day in BFS ATMs. INR 10,000 Per day and up to INR 15,000 per month in India/Nepal.
+* **POS**: Nu. 500,000 Per transaction in BoB - POS Terminals with unlimited daily/monthly limit. INR 50,000 per month in POS - Visa Network Terminals in India/Nepal.
+
+**International Debit Card**:
+Cardholders may utilize funds up to their available account balance, subject to a maximum annual expenditure limit:
+* **Visa International debit card (Public)**: USD 1,000 + ATS (If ATS is added) in a year.
+* **Visa International debit card (Student)**: USD 1,200/- (Approx. AUD 1,730/- Per month) & USD 10,000 + ATS (if ATS is added) in a year.""",
         "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_NEW_REQUEST": {
-        "text": "New Card Request\n\nYou can submit a request for a new Debit Card at your nearest branch or online via the internet banking portal.",
+        "text": "To avail a new card, you are required to visit our nearest Bank of Bhutan branch office.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
     },
     
     # Debit Card Block
     "DC_BLOCK": {
-        "text": "Call 1095 OR\n\nLogin mBoB → Cards → Select Account → Select Card → Manage Card → Card ON/OFF",
+        "text": "To block your debit card, call **1095** or Login to mBoB app > select cards > select account > select card > manage card > card ON/OFF.",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
             {"title": "Back Menu", "payload": "CARD_DEBIT"}
@@ -254,7 +329,9 @@ FAQS = {
     
     # Debit Card Activate
     "DC_ACTIVATE": {
-        "text": "Login mBoB → Cards → Debit Card → Select Account → Activate → Set 4 digit PIN → Submit.",
+        "text": """You can activate your new/ replaced issued debit cards using the mBoB app.
+
+To activate the card, login to mBoB > select cards > debit card > Select Account and activate > set card pin > enter four-digit pin of your choice > submit.""",
         "buttons": [
             {"title": "Back Menu", "payload": "CARD_DEBIT"}
         ]
@@ -262,15 +339,23 @@ FAQS = {
 
     # GoBoB FAQs
     "GOBOB_FAQ_WHAT": {
-        "text": "What is GoBoB\n\nGoBoB is the official digital mobile wallet of Bank of Bhutan, allowing instant payments, transfer, and agent cash withdrawals.",
+        "text": """What is GoBoB\n\nGoBoB is a digital wallet service offered by the Bank of Bhutan. It enables users to securely store funds and perform various financial transactions without the need to open a savings or current account..""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_BLOCKED": {
-        "text": "Login Access Blocked\n\nEnter registered mobile and citizen details to receive MPIN reset OTP and set new wallet credentials.",
+        "text": "Login Access Blocked\n\nTo reset MPIN or unblock login access to goBoB > Open goBoB App > Tap “Forgot M-PIN” option on the login page and login with OTP. If you receive an error message such as “Entered details are not valid”, please prepare a copy of your CID or family tree (in case of a minor) and visit the nearest BoBL branch.",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_REG": {
-        "text": "Registration\n\nDownload GoBoB app, click Register, and provide mobile details to instantly activate your digital wallet.",
+        "text": "Registration\n\nAnyone can register and use goBoB wallet including minors with a mobile number, email address & CID/Passport/Work permit. However, minors between the age of 10 and under 18 can use goBoB with minimal transaction rights only.",
+        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+    },
+    "GOBOB_HOW_TO_REG": {
+        "text": """**How to Register**
+
+You can download the goBoB application and register instantly.
+
+However, you can also visit the nearest BoB branch office to register for the service.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_TOURIST": {
@@ -302,7 +387,22 @@ FAQS = {
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_LIMIT": {
-        "text": "Customer Limit Category\n\nLimit category determines maximum cash volume permissible per day, which scales based on verification level.",
+        "text": """**Different types of Customer Limit Categories**
+
+* **Minimal KYC (KYC not verified) & Minor (10 years to less than 18 years)**:
+  - **Daily Transaction Limit**: Nu. 2,000
+  - **Daily Balance Limit**: Nu. 5,000
+  - **Aggregated Monthly Limit**: Nu. 10,000
+
+* **Full KYC (KYC verified)**:
+  - **Daily Transaction Limit**: Nu. 30,000
+  - **Daily Balance Limit**: Nu. 50,000
+  - **Aggregated Monthly Limit**: Nu. 100,000
+
+* **Tourist and Non-tourist (KYC verified with Dept. of Immigration)**:
+  - **Daily Transaction Limit**: Nu. 10 Million
+  - **Daily Balance Limit**: Nu. 20 Million
+  - **Aggregated Monthly Limit**: Nu. 50 Million""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
 
