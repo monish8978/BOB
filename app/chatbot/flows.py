@@ -46,8 +46,7 @@ CREDIT_CARD_MENU = {
         {"title": "Unauthorized/Fraud Txn", "payload": "CC_FRAUD"},
         {"title": "Eligibility", "payload": "CC_ELIGIBILITY"},
         {"title": "Types of Credit Card", "payload": "CC_TYPES"},
-        {"title": "Issuance Fee", "payload": "CC_ISSUANCE_FEE"},
-        {"title": "Annual Fee", "payload": "CC_ANNUAL_FEE"},
+        {"title": "Issuance & Annual Fee", "payload": "CC_FEES"},
         {"title": "Replacement/Renewal Fee", "payload": "CC_REPLACEMENT_FEE"},
         {"title": "Credit Card Limit", "payload": "CC_LIMIT"},
         {"title": "Credit Card Bill", "payload": "CC_BILL"},
@@ -226,12 +225,8 @@ Following are the limit details for fund transfers:
 * **Corporate Credit card**: Valid in all countries.""",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
-    "CC_ISSUANCE_FEE": {
-        "text": "The issuance Fee of credit card is Nu.525 Per Card.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
-    },
-    "CC_ANNUAL_FEE": {
-        "text": "The credit card will be charged with Nu.1048.95 annually as annual Fee.",
+    "CC_FEES": {
+        "text": "The issuance Fee of a credit card is Nu.525 Per Card. The credit card will also be charged with Nu.1048.95 annually as annual Fee.",
         "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_REPLACEMENT_FEE": {
