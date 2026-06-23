@@ -47,8 +47,6 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
     
     # 2. Add choice options if buttons or quick replies are present
     choices = []
-    flat_buttons = []
-    actions = []
     
     if buttons:
         for b in buttons:
@@ -59,14 +57,6 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
                 "payload": b["payload"]
             }
             choices.append(btn_obj)
-            flat_buttons.append(btn_obj)
-            actions.append({
-                "type": "Action.Submit",
-                "id": b["payload"],
-                "title": b["title"],
-                "value": b["payload"],
-                "payload": b["payload"]
-            })
             
     if quick_replies:
         for qr in quick_replies:
@@ -77,14 +67,6 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
                 "payload": qr["payload"]
             }
             choices.append(qr_obj)
-            flat_buttons.append(qr_obj)
-            actions.append({
-                "type": "Action.Submit",
-                "id": qr["payload"],
-                "title": qr["title"],
-                "value": qr["payload"],
-                "payload": qr["payload"]
-            })
             
     if choices:
         body_blocks.append({
@@ -101,12 +83,75 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
         "actions": []
     }
 
-def get_menu_card(menu_dict: Dict[str, Any]) -> Dict[str, Any]:
-    """Translates static menus to clean responses."""
-    return build_chat_response(
-        text=menu_dict["text"],
-        buttons=[{"title": b["title"], "payload": b["payload"]} for b in menu_dict["buttons"]]
-    )
+MENU_MAP = {
+    "MAIN_MENU": MAIN_MENU,
+    "MBOB_MENU": MBOB_MENU,
+    "CARDS_MENU": CARDS_MENU,
+    "CREDIT_CARD_MENU": CREDIT_CARD_MENU,
+    "DEBIT_CARD_MENU": DEBIT_CARD_MENU,
+    "GOBOB_MENU": GOBOB_MENU,
+    "GOBOB_REG_MENU": GOBOB_REG_MENU,
+    "ATS_MENU": ATS_MENU
+}
+
+def get_menu_card(menu_dict_or_id: Any, page: int = 1) -> Dict[str, Any]:
+    """Translates static menus to clean responses with pagination support."""
+    menu_identifier = "UNKNOWN_MENU"
+    
+    if isinstance(menu_dict_or_id, str):
+        menu_identifier = menu_dict_or_id
+        menu_dict = MENU_MAP.get(menu_identifier, {"text": "Menu not found", "buttons": []})
+    else:
+        menu_dict = menu_dict_or_id
+        # Reverse map to find the menu identifier if not passed explicitly
+        for key, val in MENU_MAP.items():
+            if val is menu_dict:
+                menu_identifier = key
+                break
+                
+    all_buttons = menu_dict.get("buttons", [])
+    
+    if len(all_buttons) > 10:
+        back_button = None
+        core_buttons = []
+        for b in all_buttons:
+            if b["title"] in ["Main Menu", "Back to Menu"]:
+                back_button = b
+            else:
+                core_buttons.append(b)
+                
+        if not back_button:
+            # Fallback if no specific back button is found
+            back_button = core_buttons.pop()
+            
+        max_per_page = 7
+        total_pages = (len(core_buttons) + max_per_page - 1) // max_per_page
+        start_idx = (page - 1) * max_per_page
+        end_idx = start_idx + max_per_page
+        
+        page_buttons = core_buttons[start_idx:end_idx]
+        formatted_buttons = [{"title": b["title"], "payload": b["payload"]} for b in page_buttons]
+        
+        if page > 1:
+            formatted_buttons.append({"title": "⬅️ Previous Options", "payload": f"PAGINATE_{menu_identifier}_{page-1}"})
+        if page < total_pages:
+            formatted_buttons.append({"title": "More Options ➡️", "payload": f"PAGINATE_{menu_identifier}_{page+1}"})
+            
+        formatted_buttons.append({"title": back_button["title"], "payload": back_button["payload"]})
+            
+        text = menu_dict.get("text", "")
+        if total_pages > 1:
+            text += f" (Page {page} of {total_pages})"
+            
+        return build_chat_response(
+            text=text,
+            buttons=formatted_buttons
+        )
+    else:
+        return build_chat_response(
+            text=menu_dict.get("text", ""),
+            buttons=[{"title": b["title"], "payload": b["payload"]} for b in all_buttons]
+        )
 
 def get_faq_card(faq_key: str) -> Dict[str, Any]:
     """Translates static FAQs to clean responses."""
@@ -210,11 +255,11 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
         else:
             if flow == "cards_debit":
                 flow_matches = {
-                    "limit": "DC_LIMIT",
-                    "debit card limit": "DC_LIMIT",
+                    "limit": "DC_LIMIT_DOM",
+                    "debit card limit": "DC_LIMIT_DOM",
                     "fraud": "DC_FRAUD",
                     "unauthorized": "DC_FRAUD",
-                    "eligibility": "DC_ELIGIBILITY",
+                    "eligibility": "DC_ELIGIBILITY_DOM",
                     "issuance": "DC_ISSUANCE_FEE",
                     "issuance fee": "DC_ISSUANCE_FEE",
                     "replacement": "DC_REPLACEMENT_FEE",
@@ -232,10 +277,10 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
                     "fraud": "CC_FRAUD",
                     "unauthorized": "CC_FRAUD",
                     "eligibility": "CC_ELIGIBILITY",
-                    "issuance": "CC_FEES",
-                    "issuance fee": "CC_FEES",
-                    "annual": "CC_FEES",
-                    "annual fee": "CC_FEES",
+                    "issuance": "CC_ISSUANCE_FEE",
+                    "issuance fee": "CC_ISSUANCE_FEE",
+                    "annual": "CC_ANNUAL_FEE",
+                    "annual fee": "CC_ANNUAL_FEE",
                     "replacement": "CC_REPLACEMENT_FEE",
                     "replacement fee": "CC_REPLACEMENT_FEE",
                     "bill": "CC_BILL",
@@ -288,6 +333,13 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
                 if normalized in general_matches:
                     payload = general_matches[normalized]
 
+    # Pagination Payload Handler
+    if payload and payload.startswith("PAGINATE_"):
+        parts = payload.split("_")
+        page_num = int(parts[-1])
+        menu_id = "_".join(parts[1:-1])
+        return get_menu_card(menu_id, page=page_num)
+
     # Standard "Reset/Main Menu" payload handlers
     if payload == "MAIN_MENU" or text.lower() in ["home", "main menu", "hi", "hello", "start"]:
         await redis_manager.clear_session(user_id)
@@ -304,7 +356,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             text="Please click the button below to open the support portal in your browser.",
             buttons=[
                 {"title": "Open Support Portal", "payload": settings.BOB_SUPPORT_URL},
-                {"title": "Back to Main Menu", "payload": "MAIN_MENU"}
+                {"title": "Main Menu", "payload": "MAIN_MENU"}
             ]
         )
 
@@ -346,7 +398,7 @@ To keep your details updated with the bank, please fill in the following forms a
 """,
                 buttons=[
                     {"title": "Open Website", "payload": settings.BOB_WEBSITE_URL},
-                    {"title": "Back Menu", "payload": "MAIN_MENU"}
+                    {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
         elif payload == "FLOW_DOWNLOAD_FORMS":
@@ -356,7 +408,7 @@ To keep your details updated with the bank, please fill in the following forms a
 To download forms, please click the link below:""",
                 buttons=[
                     {"title": "Download Forms", "payload": settings.BOB_DOWNLOAD_FORMS_URL},
-                    {"title": "Back Menu", "payload": "MAIN_MENU"}
+                    {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
         elif payload == "FLOW_GOBOB":
@@ -370,7 +422,7 @@ To download forms, please click the link below:""",
                 text="Savings account can be opened online via BoB website.\n\nSteps:\n\nUpdate NDI App details\nShare details with BoB\nFill form\nSubmit",
                 buttons=[
                     {"title": "Open Account Portal", "payload": "ACCT_PORTAL_OPEN"},
-                    {"title": "Back Menu", "payload": "MAIN_MENU"}
+                    {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
         elif payload == "FLOW_LOAN_APPLY":
@@ -380,7 +432,7 @@ To download forms, please click the link below:""",
                 buttons=[
                     {"title": "New Customer", "payload": "LOAN_CUST_NEW"},
                     {"title": "Existing Customer", "payload": "LOAN_CUST_EXISTING"},
-                    {"title": "Back Menu", "payload": "MAIN_MENU"}
+                    {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
         else:
@@ -461,95 +513,11 @@ To download forms, please click the link below:""",
                 text=f"Formal online loan portal redirection configured for {cust_status} Customer.",
                 buttons=[
                     {"title": "Apply Loan", "payload": "LOAN_PORTAL_OPEN"},
-                    {"title": "Back Menu", "payload": "MAIN_MENU"}
+                    {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
 
-    # ==========================================
-    # FLOW: TICKET CREATION (CRM)
-    # ==========================================
-    elif flow == "ticket_creation":
-        if step == "awaiting_ticket_name":
-            customer_name = text.strip()
-            if len(customer_name) > 2:
-                await redis_manager.update_session(user_id, step="awaiting_ticket_mobile", context_update={"customer_name": customer_name})
-                return build_chat_response(
-                    text="Please enter your active Mobile Number:"
-                )
-            else:
-                return build_chat_response(
-                    text="Name is too short. Please type your Full Name:"
-                )
-        
-        elif step == "awaiting_ticket_mobile":
-            mobile = text.strip()
-            if mobile.isdigit() and len(mobile) >= 7:
-                await redis_manager.update_session(user_id, step="awaiting_ticket_issue", context_update={"mobile_number": mobile})
-                buttons = [
-                    {"title": "mBoB App Issue", "payload": "TKT_ISSUE_MBOB"},
-                    {"title": "Card Blocked/Failed", "payload": "TKT_ISSUE_CARDS"},
-                    {"title": "KYC Form Processing", "payload": "TKT_ISSUE_KYC"},
-                    {"title": "GoBoB Wallet Support", "payload": "TKT_ISSUE_GOBOB"},
-                    {"title": "Other Banking Inquiries", "payload": "TKT_ISSUE_OTHER"}
-                ]
-                return build_chat_response(
-                    text="What category does your issue fall under? Please select a category:",
-                    buttons=buttons
-                )
-            else:
-                return build_chat_response(
-                    text="Invalid mobile number. Please enter digits only (minimum 7 characters):"
-                )
-        
-        elif step == "awaiting_ticket_issue":
-            issue_map = {
-                "TKT_ISSUE_MBOB": "mBoB App",
-                "TKT_ISSUE_CARDS": "Cards",
-                "TKT_ISSUE_KYC": "KYC Processing",
-                "TKT_ISSUE_GOBOB": "GoBoB Wallet",
-                "TKT_ISSUE_OTHER": "Other Services"
-            }
-            issue_selected = issue_map.get(payload, text.strip())
-            await redis_manager.update_session(user_id, step="awaiting_ticket_sub_category", context_update={"issue_type": issue_selected})
-            return build_chat_response(
-                text="Please type your Issue Sub Category (e.g. MPIN Lock, OTP Delay, Transaction Failure):"
-            )
-        
-        elif step == "awaiting_ticket_sub_category":
-            sub_category = text.strip()
-            await redis_manager.update_session(user_id, step="awaiting_ticket_description", context_update={"sub_category": sub_category})
-            return build_chat_response(
-                text="Finally, please provide a detailed Problem Description of your issue:"
-            )
-        
-        elif step == "awaiting_ticket_description":
-            description = text.strip()
-            ticket_num = random.randint(100000, 999999)
-            ticket_id = f"BOB-TKT-{ticket_num}"
 
-            ticket_data = {
-                "ticket_id": ticket_id,
-                "user_id": user_id,
-                "customer_name": context["customer_name"],
-                "mobile_number": context["mobile_number"],
-                "issue_type": context["issue_type"],
-                "category": context["issue_type"], # Unified
-                "sub_category": context["sub_category"],
-                "description": description
-            }
-            
-            try:
-                process_crm_ticket.delay(ticket_data)
-                celery_status = "successfully queued for processing."
-            except Exception as e:
-                logger.error(f"Failed to queue Celery task: {e}")
-                celery_status = "logged directly in system database."
-
-            await redis_manager.clear_session(user_id)
-            return build_chat_response(
-                text=f"Your request has been registered successfully.\nTicket ID: {ticket_id}\nOur support team will contact you shortly.",
-                buttons=[{"title": "Return to Main Menu", "payload": "MAIN_MENU"}]
-            )
 
     # Default fallback
     await redis_manager.clear_session(user_id)

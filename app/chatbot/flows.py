@@ -35,7 +35,7 @@ CARDS_MENU = {
     "buttons": [
         {"title": "Credit Card", "payload": "CARD_CREDIT"},
         {"title": "Debit Card", "payload": "CARD_DEBIT"},
-        {"title": "Back Menu", "payload": "MAIN_MENU"}
+        {"title": "Main Menu", "payload": "MAIN_MENU"}
     ]
 }
 
@@ -46,13 +46,14 @@ CREDIT_CARD_MENU = {
         {"title": "Unauthorized/Fraud Txn", "payload": "CC_FRAUD"},
         {"title": "Eligibility", "payload": "CC_ELIGIBILITY"},
         {"title": "Types of Credit Card", "payload": "CC_TYPES"},
-        {"title": "Issuance & Annual Fee", "payload": "CC_FEES"},
+        {"title": "Issuance Fee", "payload": "CC_ISSUANCE_FEE"},
+        {"title": "Annual Fee", "payload": "CC_ANNUAL_FEE"},
         {"title": "Replacement/Renewal Fee", "payload": "CC_REPLACEMENT_FEE"},
         {"title": "Credit Card Limit", "payload": "CC_LIMIT"},
         {"title": "Credit Card Bill", "payload": "CC_BILL"},
         {"title": "Block Credit Card", "payload": "CC_BLOCK"},
         {"title": "Activate Credit Card", "payload": "CC_ACTIVATE"},
-        {"title": "Back Menu", "payload": "FLOW_CARDS"}
+        {"title": "Back to Menu", "payload": "FLOW_CARDS"}
     ]
 }
 
@@ -62,14 +63,18 @@ DEBIT_CARD_MENU = {
     "buttons": [
         {"title": "Card Issuance Fee", "payload": "DC_ISSUANCE_FEE"},
         {"title": "Replacement/Renewal Fee", "payload": "DC_REPLACEMENT_FEE"},
-        {"title": "Fraud Transaction", "payload": "DC_FRAUD"},
-        {"title": "Card Types", "payload": "DC_TYPES"},
-        {"title": "Eligibility", "payload": "DC_ELIGIBILITY"},
-        {"title": "Withdrawal Limit", "payload": "DC_LIMIT"},
-        {"title": "New Card Request", "payload": "DC_NEW_REQUEST"},
+        {"title": "Unauthorized/Fraud Txns", "payload": "DC_FRAUD"},
+        {"title": "Types of Debit Card", "payload": "DC_TYPES"},
+        {"title": "Visa Intl (Student)", "payload": "DC_STUDENT"},
+        {"title": "Documentation - Student", "payload": "DC_DOCS_STUDENT"},
+        {"title": "Eligibility - Domestic", "payload": "DC_ELIGIBILITY_DOM"},
+        {"title": "Withdrawal Limit - Domestic", "payload": "DC_LIMIT_DOM"},
+        {"title": "Eligibility - Intl", "payload": "DC_ELIGIBILITY_INTL"},
+        {"title": "Withdrawal Limit - Intl", "payload": "DC_LIMIT_INTL"},
+        {"title": "Card Application Request", "payload": "DC_NEW_REQUEST"},
         {"title": "Block Debit Card", "payload": "DC_BLOCK"},
         {"title": "Activate Debit Card", "payload": "DC_ACTIVATE"},
-        {"title": "Back Menu", "payload": "FLOW_CARDS"}
+        {"title": "Back to Menu", "payload": "FLOW_CARDS"}
     ]
 }
 
@@ -86,7 +91,7 @@ GOBOB_MENU = {
         {"title": "Deactivate GoBoB", "payload": "GOBOB_DEACTIVATE"},
         {"title": "Wallet Refund Request", "payload": "GOBOB_REFUND"},
         {"title": "Customer Limit Category", "payload": "GOBOB_LIMIT"},
-        {"title": "Back Menu", "payload": "MAIN_MENU"}
+        {"title": "Main Menu", "payload": "MAIN_MENU"}
     ]
 }
 
@@ -98,7 +103,7 @@ GOBOB_REG_MENU = {
         {"title": "How to register", "payload": "GOBOB_HOW_TO_REG"},
         {"title": "Registration for Tourist", "payload": "GOBOB_TOURIST"},
         {"title": "Tourist KYC Verification", "payload": "GOBOB_TOURIST_KYC"},
-        {"title": "Back to GoBoB Menu", "payload": "FLOW_GOBOB"}
+        {"title": "Back to Menu", "payload": "FLOW_GOBOB"}
     ]
 }
 
@@ -113,7 +118,7 @@ ATS_MENU = {
         {"title": "ATS Add to Card", "payload": "ATS_FAQ_CARD"},
         {"title": "ATS for Minor", "payload": "ATS_FAQ_MINOR"},
         {"title": "ATS Expiry", "payload": "ATS_FAQ_EXPIRY"},
-        {"title": "Back Menu", "payload": "MAIN_MENU"}
+        {"title": "Main Menu", "payload": "MAIN_MENU"}
     ]
 }
 
@@ -135,7 +140,7 @@ An account with Bank of Bhutan and a registered Mobile/Email address is required
 4. Enter the **OTP** received and proceed.
 5. Your **mBoB User ID** and **MPIN (Login PIN)** will be sent to you.""",
         "buttons": [
-            {"title": "Back to mBoB Menu", "payload": "FLOW_MBOB"},
+            {"title": "Back to Menu", "payload": "FLOW_MBOB"},
             {"title": "Create Ticket", "payload": "RESOLVED_NO"}
         ]
     },
@@ -157,7 +162,7 @@ To reset MPIN or unblock login access to mBoB:
 9. Your M-PIN will be successfully reset.""",
         "buttons": [
             {"title": "Still Facing Issue", "payload": "RESOLVED_NO"},
-            {"title": "Back Menu", "payload": "FLOW_MBOB"}
+            {"title": "Back to Menu", "payload": "FLOW_MBOB"}
         ]
     },
     
@@ -166,7 +171,7 @@ To reset MPIN or unblock login access to mBoB:
         "text": "As per the RMA and force credit policy, all interbank failed transactions will be credited to the beneficiary’s account on the next working day if the beneficiary account is valid and active. Hence please allow us time for the payment to process.",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
-            {"title": "Back Menu", "payload": "FLOW_MBOB"}
+            {"title": "Back to Menu", "payload": "FLOW_MBOB"}
         ]
     },
     
@@ -175,7 +180,7 @@ To reset MPIN or unblock login access to mBoB:
         "text": "An individual mBoB user can only access mBoB from one device at a time. If you have changed your device and wish to access mBoB on a new device, please call us at our Toll-Free Number 1095 (Within Bhutan) or visit the nearest BoB branch. For customers residing abroad, please call us at 📞 +975-2-349903 or email the duly filled mBoB Change Request form to 📧 mbob@bob.bt",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
-            {"title": "Back Menu", "payload": "FLOW_MBOB"}
+            {"title": "Back to Menu", "payload": "FLOW_MBOB"}
         ]
     },
     
@@ -197,7 +202,7 @@ Following are the limit details for fund transfers:
 3. **BoB to Other Banks**:
    - **Daily Limit**: Nu. 1 Million per day (as per RMA guidelines)""",
         "buttons": [
-            {"title": "Back Menu", "payload": "FLOW_MBOB"}
+            {"title": "Back to Menu", "payload": "FLOW_MBOB"}
         ]
     },
     
@@ -205,17 +210,17 @@ Following are the limit details for fund transfers:
     "MBOB_CATEGORY": {
         "text": "To check/change your fund transfer category:\n\nLogin mBoB\nOpen Menu\nTap Change Category\nView current category\nChange category",
         "buttons": [
-            {"title": "Back Menu", "payload": "FLOW_MBOB"}
+            {"title": "Back to Menu", "payload": "FLOW_MBOB"}
         ]
     },
     # CREDIT CARD SPECS
     "CC_FRAUD": {
         "text": "To prevent unauthorized or fraudulent activity, cardholders may immediately block their card via mBoB or request a card replacement.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_ELIGIBILITY": {
         "text": "Any Bhutanese between the age of 18 to 70 years with a legitimate repayment source. Salaried employees with minimum net take home pay of Nu.10,040/-.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_TYPES": {
         "text": """**Types of Credit Cards**
@@ -223,19 +228,23 @@ Following are the limit details for fund transfers:
 * **Visa Domestic Credit card**: Valid in Bhutan, India & Nepal.
 * **Visa International Credit card**: Valid outside Bhutan, India & Nepal.
 * **Corporate Credit card**: Valid in all countries.""",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
     },
-    "CC_FEES": {
-        "text": "The issuance Fee of a credit card is Nu.525 Per Card. The credit card will also be charged with Nu.1048.95 annually as annual Fee.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
+    "CC_ISSUANCE_FEE": {
+        "text": "The issuance Fee of credit card is Nu.525 Per Card.",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
+    },
+    "CC_ANNUAL_FEE": {
+        "text": "The credit card will be charged with Nu.1048.95 annually as annual Fee.",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_REPLACEMENT_FEE": {
         "text": "The Fee for Credit card Replacement/Renewal is Nu.315 Per Card. You can apply this using mBoB.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_LIMIT": {
         "text": "The Maximum Card limit is up to Nu.150,000/-. You can increase your card limit against a collateral such as fixed assets, lien against deposit in CASA account, Fixed Deposit or Recurring Deposit account.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
     },
     "CC_BILL": {
         "text": """There are two payment options:
@@ -243,7 +252,7 @@ Following are the limit details for fund transfers:
 2. **MAD (Minimum Amount Due)**: 10% of the FAD.
 
 The cardholder can either opt to pay FAD or MAD. The cardholder can make the re-payment through mBoB or Choose for Auto debit (SI) from Savings account.""",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_CREDIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_CREDIT"}]
     },
     
     # Credit Card Block
@@ -254,7 +263,7 @@ However, transaction controls can be turned OFF/ON via mBoB:
 Login to mBoB app > select cards > select card > manage card > card controls > turn off the toggle switch for ATM/Online/POS. Your credit card will be temporarily blocked for further transactions.""",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
-            {"title": "Back Menu", "payload": "CARD_CREDIT"}
+            {"title": "Back to Menu", "payload": "CARD_CREDIT"}
         ]
     },
     
@@ -264,80 +273,99 @@ Login to mBoB app > select cards > select card > manage card > card controls > t
 
 To activate the card, login to mBoB > select cards > credit card > activate > set card pin > enter four-digit pin of your choice > submit.""",
         "buttons": [
-            {"title": "Back Menu", "payload": "CARD_CREDIT"}
+            {"title": "Back to Menu", "payload": "CARD_CREDIT"}
         ]
     },
 
     # DEBIT CARD SPECS
     "DC_ISSUANCE_FEE": {
         "text": "The issuance Fee of debit card is Nu.315 Per Card.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_REPLACEMENT_FEE": {
         "text": "The Fee for debit card Replacement/Renewal is Nu.315 Per Card. You can apply this using mBoB.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_FRAUD": {
         "text": "To prevent unauthorized or fraudulent activity, cardholders may immediately block their card via mBoB or request a card replacement.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_TYPES": {
         "text": """**Types of Debit Cards**
 
-* **Proprietary Debit card**: Valid within Bhutan only.
-* **Visa Domestic debit card**: Valid in Bhutan, India & Nepal.
-* **Visa International debit card (Public)**: Valid outside Bhutan, India & Nepal.
-* **Visa International debit card (Student)**: Valid outside Bhutan, India & Nepal. The student card is issued to suffice your living expenses abroad. Therefore, upon issuance of the card, bank will not remit or bank transfer your monthly living allowance and vice versa. Card validity is based on applicant student’s study period up to 4 years.
-
-**Documentation required for Visa International Debit Card (Student)**:
-* Valid passport copy
-* Duly filled application or renewal forms
-* University admission/enrollment letter
-* Valid visa/permits""",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
+Proprietary Debit card – Valid within Bhutan only.
+Visa Domestic debit card – Valid in Bhutan, India & Nepal.
+Visa International debit card (Public) – Valid outside Bhutan, India & Nepal.
+Visa International debit card (Student) – Valid outside Bhutan, India & Nepal.""",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
     },
-    "DC_ELIGIBILITY": {
-        "text": """**Eligibility criteria for Debit Cards**:
-
-* **Domestic Debit Card**: All savings bank account holders with BoB and account with Individual, Either or Survivor (E or S) are eligible. Thumb impression/Joint account holders & Non-Bhutanese Nationals are **NOT ELIGIBLE**.
-* **International Debit Card**: All savings bank account holders with BoB and account with Either or Survivor (E or S) are eligible. Thumb impression/Joint account holders are **NOT ELIGIBLE**.""",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
+    "DC_STUDENT": {
+        "text": "The student card is issued to suffice your living expenses abroad. Therefore, upon issuance of the card, bank will not remit or bank transfer your monthly living allowance and vice versa. Card validity is based on applicant student’s study period up to 4 years.",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
     },
-    "DC_LIMIT": {
-        "text": """**Withdrawal & POS Limits**:
+    "DC_DOCS_STUDENT": {
+        "text": """**Documentation - Visa International debit card (Student)**
 
-**Domestic Debit Card**:
-Cardholders may utilize funds up to their available account balance, subject to the transaction limits below.
-* **Cash Withdrawal**: Nu. 15,000 per transaction. Up to Nu.40,000 per day in BoB ATMs & Nu.30,000 per day in BFS ATMs. INR 10,000 Per day and up to INR 15,000 per month in India/Nepal.
-* **POS**: Nu. 500,000 Per transaction in BoB - POS Terminals with unlimited daily/monthly limit. INR 50,000 per month in POS - Visa Network Terminals in India/Nepal.
+● Valid passport copy
+● Duly filled application or renewal forms
+● University admission/enrollment letter
+● Valid visa/permits (for future students)
+● Valid visa/permits (for current students).
+● Student ID""",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
+    },
+    "DC_ELIGIBILITY_DOM": {
+        "text": "All savings bank account holders with BoB and account with Individual, Either or Survivor (E OR S) are eligible. Thumb impression/Joint account holders & Non-Bhutanese Nationals are NOT ELIGIBLE.",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
+    },
+    "DC_LIMIT_DOM": {
+        "text": """**Withdrawal Limit on Domestic debit card**
 
-**International Debit Card**:
-Cardholders may utilize funds up to their available account balance, subject to a maximum annual expenditure limit:
-* **Visa International debit card (Public)**: USD 1,000 + ATS (If ATS is added) in a year.
-* **Visa International debit card (Student)**: USD 1,200/- (Approx. AUD 1,730/- Per month) & USD 10,000 + ATS (if ATS is added) in a year.""",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
+Cardholders may utilize funds up to their available account balance, subject to the transaction limit as below.
+
+Cash Withdrawal:
+● Nu. 15,000 per transaction. Up to Nu.40,000 per day in BOB ATMs & Nu.30,000 per day in BFS ATMs.
+● INR 10,000 Per day and up to INR 15,000 per month in India/Nepal.
+
+POS:
+● Nu. 500,000 Per transaction in BOB - POS Terminals with unlimited daily/monthly limit.
+● INR 50,000 per month in POS - Visa Network Terminals in India/Nepal.""",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
+    },
+    "DC_ELIGIBILITY_INTL": {
+        "text": "All savings bank account holders with BoB and account with Either or Survivor (E OR S) are eligible. Thumb impression/Joint account holders are NOT ELIGIBLE.",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
+    },
+    "DC_LIMIT_INTL": {
+        "text": """**Withdrawal Limit on International debit card**
+
+Cardholders may utilize funds up to their available account balance, subject to a maximum annual expenditure limit.
+
+Visa International debit card (Public): USD 1,000 + ATS (If ATS is added) in a year.
+Visa International debit card (Student): USD 1,200/- (Approx. AUD 1,730/- Per month). & USD 10,000 + ATS (if ATS is added) in a year.""",
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
     },
     "DC_NEW_REQUEST": {
         "text": "To avail a new card, you are required to visit our nearest Bank of Bhutan branch office.",
-        "buttons": [{"title": "Back Menu", "payload": "CARD_DEBIT"}]
+        "buttons": [{"title": "Back to Menu", "payload": "CARD_DEBIT"}]
     },
     
     # Debit Card Block
     "DC_BLOCK": {
-        "text": "To block your debit card, call **1095** or Login to mBoB app > select cards > select account > select card > manage card > card ON/OFF.",
+        "text": "To block your debit card, call **1095** or Login to mbob app > select cards > select account > select card > manage card > card ON/OFF.",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
-            {"title": "Back Menu", "payload": "CARD_DEBIT"}
+            {"title": "Back to Menu", "payload": "CARD_DEBIT"}
         ]
     },
     
     # Debit Card Activate
     "DC_ACTIVATE": {
-        "text": """You can activate your new/ replaced issued debit cards using the mBoB app.
+        "text": """You can activate your new/ replaced issued debit cards using the mbob app.
 
-To activate the card, login to mBoB > select cards > debit card > Select Account and activate > set card pin > enter four-digit pin of your choice > submit.""",
+To activate the card, login to mbob > select cards > debit card > Select Account and activate > set card pin > enter four-digit pin of your choice > submit.""",
         "buttons": [
-            {"title": "Back Menu", "payload": "CARD_DEBIT"}
+            {"title": "Back to Menu", "payload": "CARD_DEBIT"}
         ]
     },
 
@@ -346,71 +374,71 @@ To activate the card, login to mBoB > select cards > debit card > Select Account
         "text": """**What is GoBoB**
 
 GoBoB is a digital wallet service offered by the Bank of Bhutan. It enables users to securely store funds and perform various financial transactions without the need to open a savings or current account.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_BLOCKED": {
         "text": """**Login Access Blocked - GoBoB**
 
 To reset MPIN or unblock login access to goBoB > Open goBoB App > Tap “Forgot M-PIN” option on the login page and login with OTP. If you receive an error message such as “Entered details are not valid”, please prepare a copy of your CID or family tree (in case of a minor) and visit the nearest BoBL branch.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_REG": {
         "text": """**Registration - goBoB**
 
 Anyone can register and use goBoB wallet including minors with a mobile number, email address & CID/Passport/Work permit. However, minors between the age of 10 and under 18 can use goBoB with minimal transaction rights only.""",
-        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
+        "buttons": [{"title": "Back to Menu", "payload": "GOBOB_REG_MENU"}]
     },
     "GOBOB_HOW_TO_REG": {
         "text": """**How to Register**
 
 You can download the goBoB application and can register instantly. However, you can also visit nearest BoB branch offices to register for the service.""",
-        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
+        "buttons": [{"title": "Back to Menu", "payload": "GOBOB_REG_MENU"}]
     },
     "GOBOB_TOURIST": {
         "text": """**Registration for Tourist**
 
 Tourists can conveniently register for the goBoB wallet even before arriving in Bhutan. They can also load funds into the wallet using their cards, ensuring a safe and hassle-free travel experience. This allows tourists to connect and resolve any issue with banks prior to the travel to Bhutan. Providing the correct information during the registration will be critical to ensuring seamless experience.""",
-        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
+        "buttons": [{"title": "Back to Menu", "payload": "GOBOB_REG_MENU"}]
     },
     "GOBOB_TOURIST_KYC": {
         "text": """**KYC verification for Tourist Customers**
 
 The tourist customer can load money into the wallet but will not be able to initiate any transactions from the wallet unless KYC is verified. The Tourist KYC is verified with the Department of Immigration (DOI). Verification needs to be initiated by the customer through ‘Verify KYC’ option available under App’s settings. KYC verification with DOI is instant. However, the customer must ensure that their personal information is correctly provided during the registration. Upon successful KYC verification, the customer can initiate transactions in a seamless manner.""",
-        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
+        "buttons": [{"title": "Back to Menu", "payload": "GOBOB_REG_MENU"}]
     },
     "GOBOB_KYC": {
         "text": "KYC Verification\n\nKYC verification elevates your transaction limit categories, requiring a physical verification visit.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_LOST": {
         "text": """**Block goBoB if lost Device**
 
 You may call us at your toll free 1095 (Within Bhutan) or +975-2-349903 (Calling from Abroad) to temporarily block the transaction access for goBoB incase of device/phone lost.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_CHARGES": {
         "text": """**Charges**
 
 Registration is free. There are no charges for other services except for adding money from cards and transfer to bank accounts. A convenience fee of 3.68% will be charged while loading your wallet using cards and 2.1% will be charged while sending money to the bank accounts.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_QR": {
         "text": """**QR Scan**
 
 The QR Scan to Pay payment from goBoB is free and there are no charges for it.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_DEACTIVATE": {
         "text": """**Deactivate goBoB**
 
 goBoB wallet deactivation is not available through the App. Customers are required to fill out goBoB wallet deactivation form available at our website and submit to the nearest branch. In the event that the customer needs to reuse the wallet, customer will be required to re-register for the goBoB wallet.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_REFUND": {
         "text": """**Wallet balance refund request**
 
 The refund will be accepted & processed only if the amount was previously loaded using your card.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_LIMIT": {
         "text": """**Different type of Customer Limit category**
@@ -429,36 +457,36 @@ The refund will be accepted & processed only if the amount was previously loaded
   - **Daily Transaction Limit**: Nu. 10 million
   - **Daily Balance Limit**: Nu. 20 million
   - **Aggregated Monthly Limit**: Nu. 50 million""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_GOBOB"}]
     },
 
     # ATS FAQs
     "ATS_FAQ_WHAT": {
         "text": "What is ATS\n\nAutomated Transfer System configures standing instructions for automated loan or bill clearings.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_ATS"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_ATS"}]
     },
     "ATS_AVAIL": {
         "text": "Avail ATS\n\nYou can configure ATS standing instruction directly inside internet banking or by visiting a branch.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_ATS"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_ATS"}]
     },
     "ATS_FAQ_LIMIT": {
         "text": "ATS Limit\n\nATS transactional limit is dictated by your savings or current account balance standing.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_ATS"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_ATS"}]
     },
     "ATS_CASH": {
         "text": "ATS Cash\n\nStanding instructions can trigger cash accumulation sweeps to designated savings categories automatically.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_ATS"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_ATS"}]
     },
     "ATS_FAQ_CARD": {
         "text": "ATS Add to Card\n\nLink your credit card bill payments directly to ATS for automated monthly clearing sweeps.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_ATS"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_ATS"}]
     },
     "ATS_FAQ_MINOR": {
         "text": "ATS for Minor\n\nATS is valid for minor savings accounts when authenticated by natural guardians in writing.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_ATS"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_ATS"}]
     },
     "ATS_FAQ_EXPIRY": {
         "text": "ATS Expiry\n\nStanding instructions persist until specified cancellation criteria are met or the time period expires.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_ATS"}]
+        "buttons": [{"title": "Back to Menu", "payload": "FLOW_ATS"}]
     }
 }

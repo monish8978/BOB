@@ -7,7 +7,7 @@ from typing import List, Dict, Any
 from app.database import get_db
 from app.models import Ticket, MessageLog
 from app.redis_client import redis_manager
-from app.schemas import MessageRequest, ChatBotResponse, TicketResponseSchema
+from app.schemas import MessageRequest, ChatBotResponse
 from app.chatbot.engine import process_user_message
 
 router = APIRouter()
@@ -61,42 +61,13 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
         await db.commit()
 
         # 4. Return formatted response
-        logger.info(f"Returning response for {user_id}: {bot_reply}")
         return ChatBotResponse(**bot_reply)
     except Exception as e:
         logger.error(f"Error in simulation engine: {e}")
         await db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/tickets", response_model=List[TicketResponseSchema])
-async def get_all_tickets(db: AsyncSession = Depends(get_db)):
-    """
-    Fetches all logged support tickets for the CRM administrative view.
-    """
-    try:
-        result = await db.execute(select(Ticket).order_by(desc(Ticket.created_at)))
-        tickets = result.scalars().all()
-        
-        response = []
-        for t in tickets:
-            response.append(TicketResponseSchema(
-                ticket_id=t.ticket_id,
-                user_id=t.user_id,
-                customer_name=t.customer_name,
-                mobile_number=t.mobile_number,
-                issue_type=t.issue_type,
-                category=t.category,
-                sub_category=t.sub_category,
-                description=t.description,
-                status=t.status,
-                assigned_to=t.assigned_to,
-                created_at=t.created_at.isoformat() if t.created_at else "",
-                updated_at=t.updated_at.isoformat() if t.updated_at else ""
-            ))
-        return response
-    except Exception as e:
-        logger.error(f"Failed to fetch tickets: {e}")
-        raise HTTPException(status_code=500, detail="Database fetch failed")
+
 
 @router.get("/logs/{user_id}")
 async def get_conversation_logs(user_id: str, db: AsyncSession = Depends(get_db)):

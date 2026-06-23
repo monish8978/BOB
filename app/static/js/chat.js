@@ -9,10 +9,6 @@ const ticketList = document.getElementById("ticket-list");
 document.addEventListener("DOMContentLoaded", () => {
     // Perform initial loading
     initializeChat();
-    loadCRMTickets();
-    
-    // Poll for new CRM tickets every 5 seconds to show active background celery updates
-    setInterval(loadCRMTickets, 5000);
 });
 
 // Initialize chatbot by requesting initial greeting
@@ -230,65 +226,7 @@ function scrollToBottom() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Fetch all tickets logged in CRM board
-async function loadCRMTickets() {
-    try {
-        const response = await fetch("/api/tickets");
-        const tickets = await response.json();
-        
-        // Update dashboard summaries
-        document.getElementById("total-tickets").innerText = tickets.length;
-        document.getElementById("open-tickets").innerText = tickets.filter(t => t.status === "OPEN").length;
-        
-        if (tickets.length === 0) {
-            ticketList.innerHTML = `
-                <div class="empty-state">
-                    <i class="fa-solid fa-envelope-open-text empty-icon"></i>
-                    <h3>No Tickets Created Yet</h3>
-                    <p>Simulate the chatbot, choose <strong>"No"</strong> to help queries, or type <strong>"ticket"</strong> to create a support ticket using background Celery workers.</p>
-                </div>
-            `;
-            return;
-        }
-        
-        // Populate tickets list
-        ticketList.innerHTML = "";
-        tickets.forEach(ticket => {
-            const ticketDate = new Date(ticket.created_at).toLocaleString();
-            
-            const ticketDiv = document.createElement("div");
-            ticketDiv.classList.add("ticket-item");
-            
-            ticketDiv.innerHTML = `
-                <div class="ticket-item-header">
-                    <div class="ticket-id-section">
-                        <h3>${ticket.ticket_id}</h3>
-                        <p><i class="fa-regular fa-clock"></i> ${ticketDate}</p>
-                    </div>
-                    <div class="ticket-tags">
-                        <span class="ticket-tag tag-issue">${ticket.issue_type}</span>
-                        <span class="ticket-tag tag-status">${ticket.status}</span>
-                    </div>
-                </div>
-                
-                <div class="ticket-details-grid">
-                    <div><span class="detail-lbl">Name:</span> <span class="detail-val">${ticket.customer_name}</span></div>
-                    <div><span class="detail-lbl">Mobile:</span> <span class="detail-val">${ticket.mobile_number}</span></div>
-                    <div><span class="detail-lbl">Category:</span> <span class="detail-val">${ticket.category}</span></div>
-                    <div><span class="detail-lbl">Sub-Cat:</span> <span class="detail-val">${ticket.sub_category}</span></div>
-                </div>
-                
-                <div class="ticket-desc">
-                    <strong>Description:</strong> ${ticket.description || "No description provided."}
-                </div>
-            `;
-            
-            ticketList.appendChild(ticketDiv);
-        });
-    } catch (e) {
-        console.error("Failed to load tickets:", e);
-    }
-}
+
 
 // Reset session variables
 async function resetDeveloperSession() {
@@ -298,7 +236,6 @@ async function resetDeveloperSession() {
         
         // Re-initialize chat greeting and refresh logs view
         initializeChat();
-        loadCRMTickets();
         
         // Show status feedback
         console.info(result.message);

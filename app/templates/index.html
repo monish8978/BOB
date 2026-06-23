@@ -84,42 +84,7 @@
             </div>
         </section>
 
-        <!-- RIGHT COLUMN: CRM Ticket Hub Control Board -->
-        <section class="panel crm-panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-ticket-simple"></i> Support Ticket Board (CRM)</h2>
-                <button class="btn btn-refresh" onclick="loadCRMTickets()">
-                    <i class="fa-solid fa-arrows-rotate"></i> Refresh
-                </button>
-            </div>
-            
-            <div class="tickets-container">
-                <div class="tickets-summary">
-                    <div class="summary-card">
-                        <span class="count" id="total-tickets">0</span>
-                        <span class="label">Total Logged</span>
-                    </div>
-                    <div class="summary-card active-card">
-                        <span class="count" id="open-tickets">0</span>
-                        <span class="label">Status Open</span>
-                    </div>
-                    <div class="summary-card system-card">
-                        <i class="fa-solid fa-truck-ramp-box icon-celery"></i>
-                        <span class="label">Worker Mode</span>
-                        <span class="val-celery">Asynchronous</span>
-                    </div>
-                </div>
 
-                <div class="ticket-list" id="ticket-list">
-                    <!-- Ticket list items populating dynamically -->
-                    <div class="empty-state">
-                        <i class="fa-solid fa-envelope-open-text empty-icon"></i>
-                        <h3>No Tickets Created Yet</h3>
-                        <p>Simulate the chatbot, choose <strong>"No"</strong> to help queries, or type <strong>"ticket"</strong> to create a support ticket using background Celery workers.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <!-- Script assets -->
