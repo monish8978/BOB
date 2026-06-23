@@ -61,6 +61,7 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
         await db.commit()
 
         # 4. Return formatted response
+        logger.info(f"Returning response for {user_id}: {bot_reply}")
         return ChatBotResponse(**bot_reply)
     except Exception as e:
         logger.error(f"Error in simulation engine: {e}")

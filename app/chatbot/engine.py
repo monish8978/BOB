@@ -98,8 +98,7 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
         "type": "adaptiveCard",
         "responseType": "",
         "body": body_blocks,
-        "actions": actions,
-        "buttons": flat_buttons
+        "actions": []
     }
 
 def get_menu_card(menu_dict: Dict[str, Any]) -> Dict[str, Any]:

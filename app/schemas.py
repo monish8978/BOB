@@ -14,7 +14,6 @@ class ChatBotResponse(BaseModel):
     responseType: str = Field("", description="State category of active response")
     body: List[Dict[str, Any]] = Field([], description="Visual building blocks")
     actions: List[Dict[str, Any]] = Field([], description="Interactive actions array")
-    buttons: Optional[List[Dict[str, Any]]] = Field([], description="Flat list of buttons")
 
 class TicketCreateSchema(BaseModel):
     user_id: str
