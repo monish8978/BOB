@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile
     container_name: bob_web
     ports:
-      - "9102:9102"
+      - "9101:9101"
     environment:
       - DATABASE_URL=mysql+aiomysql://bob_user:bob_password@db:3306/bob_db
       - DATABASE_SYNC_URL=mysql+pymysql://bob_user:bob_password@db:3306/bob_db
