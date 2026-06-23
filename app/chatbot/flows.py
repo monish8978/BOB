@@ -79,11 +79,8 @@ GOBOB_MENU = {
     "text": "Please select your GoBoB concern.",
     "buttons": [
         {"title": "What is GoBoB", "payload": "GOBOB_FAQ_WHAT"},
-        {"title": "Login Access Blocked", "payload": "GOBOB_BLOCKED"},
-        {"title": "Registration", "payload": "GOBOB_REG"},
-        {"title": "How to register", "payload": "GOBOB_HOW_TO_REG"},
-        {"title": "Registration for Tourist", "payload": "GOBOB_TOURIST"},
-        {"title": "KYC Verification", "payload": "GOBOB_KYC"},
+        # {"title": "Login Access Blocked", "payload": "GOBOB_BLOCKED"},
+        {"title": "Registration Options", "payload": "GOBOB_REG_MENU"},
         {"title": "Lost Device Block", "payload": "GOBOB_LOST"},
         {"title": "Charges", "payload": "GOBOB_CHARGES"},
         {"title": "QR Scan", "payload": "GOBOB_QR"},
@@ -91,6 +88,18 @@ GOBOB_MENU = {
         {"title": "Wallet Refund Request", "payload": "GOBOB_REFUND"},
         {"title": "Customer Limit Category", "payload": "GOBOB_LIMIT"},
         {"title": "Back Menu", "payload": "MAIN_MENU"}
+    ]
+}
+
+# GoBoB Registration Sub-Menu
+GOBOB_REG_MENU = {
+    "text": "Please select your GoBoB Registration concern.",
+    "buttons": [
+        {"title": "General Registration", "payload": "GOBOB_REG"},
+        {"title": "How to register", "payload": "GOBOB_HOW_TO_REG"},
+        {"title": "Registration for Tourist", "payload": "GOBOB_TOURIST"},
+        {"title": "Tourist KYC Verification", "payload": "GOBOB_TOURIST_KYC"},
+        {"title": "Back to GoBoB Menu", "payload": "FLOW_GOBOB"}
     ]
 }
 
@@ -339,55 +348,77 @@ To activate the card, login to mBoB > select cards > debit card > Select Account
 
     # GoBoB FAQs
     "GOBOB_FAQ_WHAT": {
-        "text": """What is GoBoB\n\nGoBoB is a digital wallet service offered by the Bank of Bhutan. It enables users to securely store funds and perform various financial transactions without the need to open a savings or current account..""",
+        "text": """**What is GoBoB**
+
+GoBoB is a digital wallet service offered by the Bank of Bhutan. It enables users to securely store funds and perform various financial transactions without the need to open a savings or current account.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_BLOCKED": {
-        "text": "Login Access Blocked\n\nTo reset MPIN or unblock login access to goBoB > Open goBoB App > Tap “Forgot M-PIN” option on the login page and login with OTP. If you receive an error message such as “Entered details are not valid”, please prepare a copy of your CID or family tree (in case of a minor) and visit the nearest BoBL branch.",
+        "text": """**Login Access Blocked - GoBoB**
+
+To reset MPIN or unblock login access to goBoB > Open goBoB App > Tap “Forgot M-PIN” option on the login page and login with OTP. If you receive an error message such as “Entered details are not valid”, please prepare a copy of your CID or family tree (in case of a minor) and visit the nearest BoBL branch.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_REG": {
-        "text": "Registration\n\nAnyone can register and use goBoB wallet including minors with a mobile number, email address & CID/Passport/Work permit. However, minors between the age of 10 and under 18 can use goBoB with minimal transaction rights only.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "text": """**Registration - goBoB**
+
+Anyone can register and use goBoB wallet including minors with a mobile number, email address & CID/Passport/Work permit. However, minors between the age of 10 and under 18 can use goBoB with minimal transaction rights only.""",
+        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
     },
     "GOBOB_HOW_TO_REG": {
         "text": """**How to Register**
 
-You can download the goBoB application and register instantly.
-
-However, you can also visit the nearest BoB branch office to register for the service.""",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+You can download the goBoB application and can register instantly. However, you can also visit nearest BoB branch offices to register for the service.""",
+        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
     },
     "GOBOB_TOURIST": {
-        "text": "Registration for Tourist\n\nTourists can register at branches or agents using passport information and local mobile network connections.",
-        "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
+        "text": """**Registration for Tourist**
+
+Tourists can conveniently register for the goBoB wallet even before arriving in Bhutan. They can also load funds into the wallet using their cards, ensuring a safe and hassle-free travel experience. This allows tourists to connect and resolve any issue with banks prior to the travel to Bhutan. Providing the correct information during the registration will be critical to ensuring seamless experience.""",
+        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
+    },
+    "GOBOB_TOURIST_KYC": {
+        "text": """**KYC verification for Tourist Customers**
+
+The tourist customer can load money into the wallet but will not be able to initiate any transactions from the wallet unless KYC is verified. The Tourist KYC is verified with the Department of Immigration (DOI). Verification needs to be initiated by the customer through ‘Verify KYC’ option available under App’s settings. KYC verification with DOI is instant. However, the customer must ensure that their personal information is correctly provided during the registration. Upon successful KYC verification, the customer can initiate transactions in a seamless manner.""",
+        "buttons": [{"title": "Back Menu", "payload": "GOBOB_REG_MENU"}]
     },
     "GOBOB_KYC": {
         "text": "KYC Verification\n\nKYC verification elevates your transaction limit categories, requiring a physical verification visit.",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_LOST": {
-        "text": "Lost Device Block\n\nCall our 24/7 Toll-Free number 1095 instantly to temporarily lock your digital wallet and secure your funds.",
+        "text": """**Block goBoB if lost Device**
+
+You may call us at your toll free 1095 (Within Bhutan) or +975-2-349903 (Calling from Abroad) to temporarily block the transaction access for goBoB incase of device/phone lost.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_CHARGES": {
-        "text": "Charges\n\nWallet creation is free of cost. Wallet to wallet transfers are free. Cash out at agents incurs a minimal fee.",
+        "text": """**Charges**
+
+Registration is free. There are no charges for other services except for adding money from cards and transfer to bank accounts. A convenience fee of 3.68% will be charged while loading your wallet using cards and 2.1% will be charged while sending money to the bank accounts.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_QR": {
-        "text": "QR Scan\n\nScan any standard BoB Pay QR or Bhutan QR at merchant outlets to authorize instant digital payments.",
+        "text": """**QR Scan**
+
+The QR Scan to Pay payment from goBoB is free and there are no charges for it.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_DEACTIVATE": {
-        "text": "Deactivate GoBoB\n\nVisit nearest branch to deactivate GoBoB and close your digital wallet account permanently.",
+        "text": """**Deactivate goBoB**
+
+goBoB wallet deactivation is not available through the App. Customers are required to fill out goBoB wallet deactivation form available at our website and submit to the nearest branch. In the event that the customer needs to reuse the wallet, customer will be required to re-register for the goBoB wallet.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_REFUND": {
-        "text": "Wallet Refund Request\n\nSubmit a request at branch to refund wallet balance to your primary bank account.",
+        "text": """**Wallet balance refund request**
+
+The refund will be accepted & processed only if the amount was previously loaded using your card.""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
     "GOBOB_LIMIT": {
-        "text": """**Different types of Customer Limit Categories**
+        "text": """**Different type of Customer Limit category**
 
 * **Minimal KYC (KYC not verified) & Minor (10 years to less than 18 years)**:
   - **Daily Transaction Limit**: Nu. 2,000
@@ -400,9 +431,9 @@ However, you can also visit the nearest BoB branch office to register for the se
   - **Aggregated Monthly Limit**: Nu. 100,000
 
 * **Tourist and Non-tourist (KYC verified with Dept. of Immigration)**:
-  - **Daily Transaction Limit**: Nu. 10 Million
-  - **Daily Balance Limit**: Nu. 20 Million
-  - **Aggregated Monthly Limit**: Nu. 50 Million""",
+  - **Daily Transaction Limit**: Nu. 10 million
+  - **Daily Balance Limit**: Nu. 20 million
+  - **Aggregated Monthly Limit**: Nu. 50 million""",
         "buttons": [{"title": "Back Menu", "payload": "FLOW_GOBOB"}]
     },
 

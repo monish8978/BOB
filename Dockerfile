@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /workspace/
 
 # Expose port for FastAPI application
-EXPOSE 8088
+EXPOSE 9102
 
 # Default command to run the FastAPI app (can be overridden for Celery worker role)
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8088"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "9102"]

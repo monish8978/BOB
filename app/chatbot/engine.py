@@ -1,11 +1,33 @@
 import random
 import logging
+import aiohttp
 from typing import Dict, Any, List
 from app.redis_client import redis_manager
 from app.chatbot.flows import *
 from app.tasks import process_crm_ticket
 
+from app.config import settings
+
 logger = logging.getLogger(__name__)
+
+async def query_rag(query_text: str) -> str | None:
+    url = settings.RAG_API_URL
+    data = {
+        "rag_id": settings.RAG_ID,
+        "query": query_text,
+        "top_k": 3
+    }
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(url, json=data, timeout=10) as response:
+                if response.status == 200:
+                    res_json = await response.json()
+                    answer = res_json.get("answer")
+                    if answer:
+                        return answer.strip()
+    except Exception as e:
+        logger.error(f"Error querying RAG API: {e}")
+    return None
 
 def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_replies: List[Dict[str, str]] = None) -> Dict[str, Any]:
     """
@@ -25,20 +47,43 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
     
     # 2. Add choice options if buttons or quick replies are present
     choices = []
+    flat_buttons = []
+    actions = []
+    
     if buttons:
         for b in buttons:
-            choices.append({
+            btn_obj = {
                 "id": b["payload"],
                 "title": b["title"],
-                "value": b["title"]
+                "value": b["payload"],
+                "payload": b["payload"]
+            }
+            choices.append(btn_obj)
+            flat_buttons.append(btn_obj)
+            actions.append({
+                "type": "Action.Submit",
+                "id": b["payload"],
+                "title": b["title"],
+                "value": b["payload"],
+                "payload": b["payload"]
             })
             
     if quick_replies:
         for qr in quick_replies:
-            choices.append({
+            qr_obj = {
                 "id": qr["payload"],
                 "title": qr["title"],
-                "value": qr["title"]
+                "value": qr["payload"],
+                "payload": qr["payload"]
+            }
+            choices.append(qr_obj)
+            flat_buttons.append(qr_obj)
+            actions.append({
+                "type": "Action.Submit",
+                "id": qr["payload"],
+                "title": qr["title"],
+                "value": qr["payload"],
+                "payload": qr["payload"]
             })
             
     if choices:
@@ -53,7 +98,8 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
         "type": "adaptiveCard",
         "responseType": "",
         "body": body_blocks,
-        "actions": []
+        "actions": actions,
+        "buttons": flat_buttons
     }
 
 def get_menu_card(menu_dict: Dict[str, Any]) -> Dict[str, Any]:
@@ -96,82 +142,152 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
     # Intelligent text-to-payload fallback mapping
     if not payload and text:
         normalized = text.lower().strip()
-        if normalized in ["mbob", "mbob services", "1. mbob"]:
-            payload = "FLOW_MBOB"
-        elif normalized in ["cards", "card services", "2. cards"]:
-            payload = "FLOW_CARDS"
-        elif normalized in ["update latest kyc", "kyc", "update kyc", "3. update latest kyc"]:
-            payload = "FLOW_KYC"
-        elif normalized in ["download forms", "forms", "4. download forms"]:
-            payload = "FLOW_DOWNLOAD_FORMS"
-        elif normalized in ["gobob", "gobob app", "5. gobob"]:
-            payload = "FLOW_GOBOB"
-        elif normalized in ["annual travel scheme (ats)", "ats", "6. annual travel scheme (ats)"]:
-            payload = "FLOW_ATS"
-        elif normalized in ["bob account opening", "account opening", "7. bob account opening"]:
-            payload = "FLOW_LOANS_ACCTS"
-        elif normalized in ["bob loan apply online", "apply loan", "loan", "8. bob loan apply online"]:
-            payload = "FLOW_LOAN_APPLY"
-        elif "registration" in normalized or "register" in normalized:
-            payload = "GOBOB_REG" if flow == "gobob" else "MBOB_REGISTRATION"
-        elif "blocked" in normalized or "forgot" in normalized or "unlock" in normalized:
-            payload = "GOBOB_BLOCKED" if flow == "gobob" else "MBOB_LOGIN_BLOCKED"
-        elif "failed" in normalized or "transfer failed" in normalized:
-            payload = "MBOB_TX_FAILED"
-        elif "device" in normalized:
-            payload = "GOBOB_LOST" if "lost" in normalized else "MBOB_DEVICE_CHANGE"
-        elif "limit" in normalized:
-            if flow == "cards_credit":
-                payload = "CC_LIMIT"
-            elif flow == "cards_debit":
-                payload = "DC_LIMIT"
-            elif flow == "ats":
-                payload = "ATS_FAQ_LIMIT"
+        
+        # 1. Global exact matches for menu structures and actions
+        EXACT_MATCHES = {
+            # Main Menu navigation
+            "mbob": "FLOW_MBOB",
+            "mbob services": "FLOW_MBOB",
+            "1. mbob": "FLOW_MBOB",
+            "cards": "FLOW_CARDS",
+            "card services": "FLOW_CARDS",
+            "2. cards": "FLOW_CARDS",
+            "update latest kyc": "FLOW_KYC",
+            "kyc": "FLOW_KYC",
+            "update kyc": "FLOW_KYC",
+            "3. update latest kyc": "FLOW_KYC",
+            "download forms": "FLOW_DOWNLOAD_FORMS",
+            "forms": "FLOW_DOWNLOAD_FORMS",
+            "4. download forms": "FLOW_DOWNLOAD_FORMS",
+            "gobob": "FLOW_GOBOB",
+            "gobob app": "FLOW_GOBOB",
+            "5. gobob": "FLOW_GOBOB",
+            "annual travel scheme (ats)": "FLOW_ATS",
+            "ats": "FLOW_ATS",
+            "6. annual travel scheme (ats)": "FLOW_ATS",
+            "bob account opening": "FLOW_LOANS_ACCTS",
+            "account opening": "FLOW_LOANS_ACCTS",
+            "7. bob account opening": "FLOW_LOANS_ACCTS",
+            "bob loan apply online": "FLOW_LOAN_APPLY",
+            "apply loan": "FLOW_LOAN_APPLY",
+            "loan": "FLOW_LOAN_APPLY",
+            "8. bob loan apply online": "FLOW_LOAN_APPLY",
+            
+            # Common/Standard Action words
+            "home": "MAIN_MENU",
+            "main menu": "MAIN_MENU",
+            "back menu": "MAIN_MENU",
+            "back to main menu": "MAIN_MENU",
+            "create ticket": "RESOLVED_NO",
+            "no": "RESOLVED_NO",
+            "still facing issue": "RESOLVED_NO",
+            
+            # GoBoB menu options
+            "what is gobob": "GOBOB_FAQ_WHAT",
+            "login access blocked": "GOBOB_BLOCKED",
+            "registration options": "GOBOB_REG_MENU",
+            "lost device block": "GOBOB_LOST",
+            "charges": "GOBOB_CHARGES",
+            "qr scan": "GOBOB_QR",
+            "deactivate gobob": "GOBOB_DEACTIVATE",
+            "wallet refund request": "GOBOB_REFUND",
+            "customer limit category": "GOBOB_LIMIT",
+            
+            # GoBoB Registration options
+            "general registration": "GOBOB_REG",
+            "how to register": "GOBOB_HOW_TO_REG",
+            "registration for tourist": "GOBOB_TOURIST",
+            "tourist kyc verification": "GOBOB_TOURIST_KYC",
+            
+            # Cards general
+            "debit card": "CARD_DEBIT",
+            "credit card": "CARD_CREDIT",
+        }
+        
+        if normalized in EXACT_MATCHES:
+            payload = EXACT_MATCHES[normalized]
+            
+        # 2. Flow-specific exact keyword matches
+        else:
+            if flow == "cards_debit":
+                flow_matches = {
+                    "limit": "DC_LIMIT",
+                    "debit card limit": "DC_LIMIT",
+                    "fraud": "DC_FRAUD",
+                    "unauthorized": "DC_FRAUD",
+                    "eligibility": "DC_ELIGIBILITY",
+                    "issuance": "DC_ISSUANCE_FEE",
+                    "issuance fee": "DC_ISSUANCE_FEE",
+                    "replacement": "DC_REPLACEMENT_FEE",
+                    "replacement fee": "DC_REPLACEMENT_FEE",
+                    "block": "DC_BLOCK",
+                    "activate": "DC_ACTIVATE",
+                }
+                if normalized in flow_matches:
+                    payload = flow_matches[normalized]
+                    
+            elif flow == "cards_credit":
+                flow_matches = {
+                    "limit": "CC_LIMIT",
+                    "credit card limit": "CC_LIMIT",
+                    "fraud": "CC_FRAUD",
+                    "unauthorized": "CC_FRAUD",
+                    "eligibility": "CC_ELIGIBILITY",
+                    "issuance": "CC_ISSUANCE_FEE",
+                    "issuance fee": "CC_ISSUANCE_FEE",
+                    "annual": "CC_ANNUAL_FEE",
+                    "annual fee": "CC_ANNUAL_FEE",
+                    "replacement": "CC_REPLACEMENT_FEE",
+                    "replacement fee": "CC_REPLACEMENT_FEE",
+                    "bill": "CC_BILL",
+                    "block": "CC_BLOCK",
+                    "activate": "CC_ACTIVATE",
+                }
+                if normalized in flow_matches:
+                    payload = flow_matches[normalized]
+                    
             elif flow == "gobob":
-                payload = "GOBOB_LIMIT"
-            else:
-                payload = "MBOB_LIMIT"
-        elif "category" in normalized or "change category" in normalized:
-            payload = "MBOB_CATEGORY"
-        elif "fraud" in normalized or "unauthorized" in normalized:
-            payload = "DC_FRAUD" if flow == "cards_debit" else "CC_FRAUD"
-        elif "eligibility" in normalized:
-            payload = "DC_ELIGIBILITY" if flow == "cards_debit" else "CC_ELIGIBILITY"
-        elif "issuance" in normalized:
-            payload = "DC_ISSUANCE_FEE" if flow == "cards_debit" else "CC_ISSUANCE_FEE"
-        elif "annual" in normalized:
-            payload = "CC_ANNUAL_FEE"
-        elif "replacement" in normalized or "renewal" in normalized:
-            payload = "DC_REPLACEMENT_FEE" if flow == "cards_debit" else "CC_REPLACEMENT_FEE"
-        elif "bill" in normalized:
-            payload = "CC_BILL"
-        elif "block" in normalized:
-            payload = "DC_BLOCK" if flow == "cards_debit" else "CC_BLOCK"
-        elif "activate" in normalized:
-            payload = "DC_ACTIVATE" if flow == "cards_debit" else "CC_ACTIVATE"
-        elif "kyc" in normalized:
-            payload = "GOBOB_KYC" if flow == "gobob" else "FLOW_KYC"
-        elif "download" in normalized or "forms" in normalized:
-            payload = "FLOW_DOWNLOAD_FORMS"
-        elif "gobob" in normalized:
-            payload = "FLOW_GOBOB"
-        elif "ats" in normalized:
-            if "expiry" in normalized:
-                payload = "ATS_FAQ_EXPIRY"
-            elif "minor" in normalized:
-                payload = "ATS_FAQ_MINOR"
-            elif "card" in normalized:
-                payload = "ATS_FAQ_CARD"
-            elif "cash" in normalized:
-                payload = "ATS_CASH"
-            elif "avail" in normalized:
-                payload = "ATS_AVAIL"
-            else:
-                payload = "FLOW_ATS"
-        elif "opening" in normalized or "account opening" in normalized:
-            payload = "FLOW_LOANS_ACCTS"
-        elif "loan" in normalized or "apply loan" in normalized:
-            payload = "FLOW_LOAN_APPLY"
+                flow_matches = {
+                    "limit": "GOBOB_LIMIT",
+                    "kyc": "GOBOB_KYC",
+                    "registration": "GOBOB_REG",
+                    "register": "GOBOB_HOW_TO_REG",
+                    "blocked": "GOBOB_BLOCKED",
+                    "lost": "GOBOB_LOST",
+                    "refund": "GOBOB_REFUND",
+                }
+                if normalized in flow_matches:
+                    payload = flow_matches[normalized]
+                    
+            elif flow == "ats":
+                flow_matches = {
+                    "limit": "ATS_FAQ_LIMIT",
+                    "expiry": "ATS_FAQ_EXPIRY",
+                    "minor": "ATS_FAQ_MINOR",
+                    "card": "ATS_FAQ_CARD",
+                    "cash": "ATS_CASH",
+                    "avail": "ATS_AVAIL",
+                }
+                if normalized in flow_matches:
+                    payload = flow_matches[normalized]
+                    
+            # 3. Fallback general exact matches (when flow is not set or not specific)
+            if not payload:
+                general_matches = {
+                    "registration": "MBOB_REGISTRATION",
+                    "register": "MBOB_REGISTRATION",
+                    "blocked": "MBOB_LOGIN_BLOCKED",
+                    "forgot": "MBOB_LOGIN_BLOCKED",
+                    "unlock": "MBOB_LOGIN_BLOCKED",
+                    "failed": "MBOB_TX_FAILED",
+                    "transfer failed": "MBOB_TX_FAILED",
+                    "device": "MBOB_DEVICE_CHANGE",
+                    "limit": "MBOB_LIMIT",
+                    "category": "MBOB_CATEGORY",
+                    "change category": "MBOB_CATEGORY",
+                }
+                if normalized in general_matches:
+                    payload = general_matches[normalized]
 
     # Standard "Reset/Main Menu" payload handlers
     if payload == "MAIN_MENU" or text.lower() in ["home", "main menu", "hi", "hello", "start"]:
@@ -188,10 +304,22 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
         return build_chat_response(
             text="Please click the button below to open the support portal in your browser.",
             buttons=[
-                {"title": "Open Support Portal", "payload": "https://www.c-zentrix.com/"},
+                {"title": "Open Support Portal", "payload": settings.BOB_SUPPORT_URL},
                 {"title": "Back to Main Menu", "payload": "MAIN_MENU"}
             ]
         )
+
+    # RAG Integration for free-text questions
+    if not payload and text and flow != "ticket_creation":
+        rag_answer = await query_rag(text)
+        if rag_answer:
+            return build_chat_response(
+                text=rag_answer,
+                buttons=[
+                    {"title": "Main Menu", "payload": "MAIN_MENU"}
+                    # {"title": "Still Facing Issue", "payload": "RESOLVED_NO"}
+                ]
+            )
 
     # ==========================================
     # FLOW: MAIN MENU TRANSITIONS
@@ -218,7 +346,7 @@ To keep your details updated with the bank, please fill in the following forms a
 *(Note: Please send the emails from your registered email address).*
 """,
                 buttons=[
-                    {"title": "Open Website", "payload": "https://www.bob.bt/"},
+                    {"title": "Open Website", "payload": settings.BOB_WEBSITE_URL},
                     {"title": "Back Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -228,7 +356,7 @@ To keep your details updated with the bank, please fill in the following forms a
 
 To download forms, please click the link below:""",
                 buttons=[
-                    {"title": "Download Forms", "payload": "https://www.bob.bt/service-and-support/download-forms/"},
+                    {"title": "Download Forms", "payload": settings.BOB_DOWNLOAD_FORMS_URL},
                     {"title": "Back Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -307,7 +435,9 @@ To download forms, please click the link below:""",
     # FLOW: GOBOB
     # ==========================================
     elif flow == "gobob":
-        if payload in FAQS:
+        if payload == "GOBOB_REG_MENU":
+            return get_menu_card(GOBOB_REG_MENU)
+        elif payload in FAQS:
             return get_faq_card(payload)
         else:
             return get_menu_card(GOBOB_MENU)
