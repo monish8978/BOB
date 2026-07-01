@@ -146,9 +146,9 @@ def get_menu_card(menu_dict_or_id: Any, page: int = 1) -> Dict[str, Any]:
         formatted_buttons = [{"title": b["title"], "payload": b["payload"]} for b in page_buttons]
         
         if page > 1:
-            formatted_buttons.append({"title": "â¬…ï¸ Previous Options", "payload": f"PAGINATE_{menu_identifier}_{page-1}"})
+            formatted_buttons.append({"title": "Previous Options", "payload": f"PAGINATE_{menu_identifier}_{page-1}"})
         if page < total_pages:
-            formatted_buttons.append({"title": "More Options âž¡ï¸", "payload": f"PAGINATE_{menu_identifier}_{page+1}"})
+            formatted_buttons.append({"title": "More Options", "payload": f"PAGINATE_{menu_identifier}_{page+1}"})
             
         formatted_buttons.append({"title": back_button["title"], "payload": back_button["payload"]})
             
@@ -219,6 +219,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             "gobob": "FLOW_GOBOB",
             "gobob app": "FLOW_GOBOB",
             "5. gobob": "FLOW_GOBOB",
+            "annual travel (ats)": "FLOW_ATS",
             "annual travel scheme (ats)": "FLOW_ATS",
             "ats": "FLOW_ATS",
             "6. annual travel scheme (ats)": "FLOW_ATS",
@@ -274,9 +275,34 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             "ats for minor": "ATS_FAQ_MINOR",
             "ats expiry": "ATS_FAQ_EXPIRY",
 
-            # Cards general
+            # Cards general & Credit Card options
             "debit card": "CARD_DEBIT",
             "credit card": "CARD_CREDIT",
+            "unauthorized/fraud txn": "CC_FRAUD",
+            "unauthorized/fraud txns": "DC_FRAUD",
+            "types of credit card": "CC_TYPES",
+            "credit card eligibility": "CC_ELIGIBILITY",
+            "credit card issuance fee": "CC_ISSUANCE_FEE",
+            "credit card annual fee": "CC_ANNUAL_FEE",
+            "credit card replacement/renewal fee": "CC_REPLACEMENT_FEE",
+            "credit card limit": "CC_LIMIT",
+            "credit card bill": "CC_BILL",
+            "block credit card": "CC_BLOCK",
+            "activate credit card": "CC_ACTIVATE",
+
+            # Debit Card options
+            "card issuance fee": "DC_ISSUANCE_FEE",
+            "debit card replacement/renewal fee": "DC_REPLACEMENT_FEE",
+            "types of debit card": "DC_TYPES",
+            "visa intl (student)": "DC_STUDENT",
+            "documentation - student": "DC_DOCS_STUDENT",
+            "eligibility - domestic": "DC_ELIGIBILITY_DOM",
+            "withdrawal limit - domestic": "DC_LIMIT_DOM",
+            "eligibility - intl": "DC_ELIGIBILITY_INTL",
+            "withdrawal limit - intl": "DC_LIMIT_INTL",
+            "card application request": "DC_NEW_REQUEST",
+            "block debit card": "DC_BLOCK",
+            "activate debit card": "DC_ACTIVATE",
         }
         
         if normalized in EXACT_MATCHES:
@@ -389,16 +415,23 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
     if payload == "RESOLVED_NO" or text.lower() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support", "create support ticket"]:
         await redis_manager.clear_session(user_id)
         return build_chat_response(
-            text="Please click the button below to open the support portal in your browser.",
+            text=f"To open the support portal in your browser, please <link href='{settings.BOB_SUPPORT_URL}'>Click Here</link>.",
             buttons=[
-                {"title": "Open Support Portal", "payload": settings.BOB_SUPPORT_URL},
                 {"title": "Back To Menu", "payload": "MAIN_MENU"},
                 {"title": "Main Menu", "payload": "MAIN_MENU"}
             ]
         )
 
     # Connect to live agent
-    if payload == "CONNECT_TO_LIVE_AGENT" or (text and any(kw in text.lower() for kw in ["live agent", "connect to live", "human agent", "talk to human", "customer care"])):
+    text_lower = text.lower().strip() if text else ""
+    if payload == "CONNECT_TO_LIVE_AGENT" or (
+        text and (
+            text_lower in ["agent", "human", "help", "support", "representative", "care"] or
+            any(kw in text_lower for kw in ["live agent", "connect to live", "human agent", "talk to human", "customer care", "customer support", "representative", "talk to someone", "speak to someone", "real person", "connect to agent", "talk to agent"]) or
+            bool(re.search(r'\b(connect|talk|speak|chat|transfer)\b.*\b(agent|human|person|representative|support|care)\b', text_lower)) or
+            bool(re.search(r'\b(want|need|get|require)\b.*\b(agent|human|person|support|help)\b', text_lower))
+        )
+    ):
         await redis_manager.clear_session(user_id)
         return {
             "type": "adaptiveCard",
@@ -406,7 +439,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             "body": [
                 {
                     "type": "TextBlock",
-                    "text": "Hi ðŸ‘‹\n\nTo connect with a live agent, please click the \"Connect to Live\" button below.\n\nOur support team will assist you shortly.\n\nThank you for your patience ðŸ˜Š"
+                    "text": "Hi!\n\nTo connect with a live agent, please click the \"<b>Connect to Live</b>\" button below.\n\nOur support team will assist you shortly.\n\nThank you for your patience!"
                 }
             ],
             "actions": [
@@ -430,7 +463,6 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
                 buttons=[
                     {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
-                    # {"title": "Still Facing Issue", "payload": "RESOLVED_NO"}
                 ]
             )
 
@@ -481,9 +513,9 @@ Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the web
             return get_menu_card(ATS_MENU)
         elif payload == "FLOW_LOANS_ACCTS":
             return build_chat_response(
-                text="Savings account can be opened online via BoB website.\n\nSteps:\n\nUpdate NDI App details\nShare details with BoB\nFill form\nSubmit",
+                text=f"""Savings deposit account can be opened online via our website at <link href='{settings.BOB_WEBSITE_URL}'>www.bob.bt</link> – Bob account online. Before opening online, please add your current address, Phone number and email address in the Bhutan NDI App. Scan the NDI App, BOB will request to share your data via NDI. Please share it and fill up the account opening form on your screen and complete the process.
+To open a BoB account online, please <link href='{settings.BOB_ACCOUNT_URL}'>Click Here</link>.""",
                 buttons=[
-                    {"title": "Open Account Portal", "payload": "ACCT_PORTAL_OPEN"},
                     {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
@@ -491,10 +523,9 @@ Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the web
         elif payload == "FLOW_LOAN_APPLY":
             await redis_manager.update_session(user_id, flow="loan_apply", step="awaiting_customer_type")
             return build_chat_response(
-                text="Select loan type and apply online.",
+                text=f"""You can apply for Loans online via our website at <link href='{settings.BOB_WEBSITE_URL}'>www.bob.bt</link> – Bob Loan Apply online and select the type of loan that you wish to apply for. Please choose “NEW CUSTOMER” If you currently donot have an account with the bank. If you already have an account with the bank then please choose “Existing customer” and complete the process.
+To apply for a BoB Loan online, please <link href='{settings.BOB_LOAN_URL}'>Click Here</link>.""",
                 buttons=[
-                    {"title": "New Customer", "payload": "LOAN_CUST_NEW"},
-                    {"title": "Existing Customer", "payload": "LOAN_CUST_EXISTING"},
                     {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]

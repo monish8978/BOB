@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     BOB_WEBSITE_URL: str = "https://www.bob.bt/"
     BOB_SUPPORT_URL: str = "https://www.bob.bt/service-and-support/"
     BOB_DOWNLOAD_FORMS_URL: str = "https://www.bob.bt/service-and-support/download-forms/"
+    BOB_ACCOUNT_URL: str = "https://account.bob.bt/"
+    BOB_LOAN_URL: str = "https://bobloan.bob.bt/dlp/#/dashboard"
 
     class Config:
         env_file = ".env"

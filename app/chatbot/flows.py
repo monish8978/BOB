@@ -109,7 +109,7 @@ GOBOB_REG_MENU = {
 
 # ATS Menu
 ATS_MENU = {
-    "text": "Please select your ATS concern.",
+    "text": "Annual Travel (ATS)\n\nPlease select your ATS concern.",
     "buttons": [
         {"title": "What is ATS", "payload": "ATS_FAQ_WHAT"},
         {"title": "Avail ATS", "payload": "ATS_AVAIL"},
@@ -161,7 +161,6 @@ To reset MPIN or unblock login access to mBoB:
 8. On the <b>"New M-PIN"</b> field, enter the PIN of your choice and repeat the same on <b>"Confirm New M-PIN"</b>
 9. Your M-PIN will be successfully reset.""",
         "buttons": [
-            {"title": "Still Facing Issue", "payload": "RESOLVED_NO"},
             {"title": "Back To Menu", "payload": "FLOW_MBOB"}, {"title": "Main Menu", "payload": "MAIN_MENU"}
         ]
     },
