@@ -239,9 +239,18 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             "no": "RESOLVED_NO",
             "still facing issue": "RESOLVED_NO",
             
+            # mBoB options
+            "registration": "MBOB_REGISTRATION",
+            "register": "MBOB_REGISTRATION",
+            "fund transfer failed to other banks": "MBOB_TX_FAILED",
+            "device change": "MBOB_DEVICE_CHANGE",
+            "change device": "MBOB_DEVICE_CHANGE",
+            "fund transfer limit": "MBOB_LIMIT",
+            "check/change category": "MBOB_CATEGORY",
+
             # GoBoB menu options
             "what is gobob": "GOBOB_FAQ_WHAT",
-            "login access blocked": "GOBOB_BLOCKED",
+            "login access blocked": "MBOB_LOGIN_BLOCKED",
             "registration options": "GOBOB_REG_MENU",
             "lost device block": "GOBOB_LOST",
             "charges": "GOBOB_CHARGES",
@@ -256,6 +265,15 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             "registration for tourist": "GOBOB_TOURIST",
             "tourist kyc verification": "GOBOB_TOURIST_KYC",
             
+            # ATS options
+            "what is ats": "ATS_FAQ_WHAT",
+            "avail ats": "ATS_AVAIL",
+            "ats limit": "ATS_FAQ_LIMIT",
+            "ats cash": "ATS_CASH",
+            "ats add to card": "ATS_FAQ_CARD",
+            "ats for minor": "ATS_FAQ_MINOR",
+            "ats expiry": "ATS_FAQ_EXPIRY",
+
             # Cards general
             "debit card": "CARD_DEBIT",
             "credit card": "CARD_CREDIT",
@@ -338,10 +356,15 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
                     "unlock": "MBOB_LOGIN_BLOCKED",
                     "failed": "MBOB_TX_FAILED",
                     "transfer failed": "MBOB_TX_FAILED",
+                    "fund transfer failed to other banks": "MBOB_TX_FAILED",
                     "device": "MBOB_DEVICE_CHANGE",
+                    "device change": "MBOB_DEVICE_CHANGE",
+                    "change device": "MBOB_DEVICE_CHANGE",
                     "limit": "MBOB_LIMIT",
+                    "fund transfer limit": "MBOB_LIMIT",
                     "category": "MBOB_CATEGORY",
                     "change category": "MBOB_CATEGORY",
+                    "check/change category": "MBOB_CATEGORY",
                 }
                 if normalized in general_matches:
                     payload = general_matches[normalized]

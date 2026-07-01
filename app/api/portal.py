@@ -27,7 +27,8 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
     payload = None
     message_text = query_str
     
-    if query_str.isupper() and any(k in query_str for k in ["FLOW_", "MBOB_", "CARD_", "CC_", "DC_", "GOBOB_", "ATS_", "RESOLVED_", "MAIN_MENU"]):
+    import re
+    if re.match(r'^[A-Z0-9]+_[A-Z0-9_]+$', query_str):
         payload = query_str
         message_text = ""
 

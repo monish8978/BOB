@@ -22,7 +22,7 @@ MBOB_MENU = {
     "buttons": [
         {"title": "Registration", "payload": "MBOB_REGISTRATION"},
         {"title": "Login Access Blocked", "payload": "MBOB_LOGIN_BLOCKED"},
-        {"title": "Interbank Transfer Fail", "payload": "MBOB_TX_FAILED"},
+        {"title": "Fund transfer failed to other banks", "payload": "MBOB_TX_FAILED"},
         {"title": "Device Change", "payload": "MBOB_DEVICE_CHANGE"},
         {"title": "Fund Transfer Limit", "payload": "MBOB_LIMIT"},
         {"title": "Check/Change Category", "payload": "MBOB_CATEGORY"}
@@ -168,9 +168,12 @@ To reset MPIN or unblock login access to mBoB:
     
     # mBoB Fund Transfer Failed to Other Banks
     "MBOB_TX_FAILED": {
-        "text": """<b>Interbank Transfer Failed</b>
+        "text": """<b>Fund transfer failed to other banks</b>
 
-As per the RMA and force credit policy, all interbank failed transactions will be credited to the beneficiaryâ€™s account on the next working day if the beneficiary account is valid and active. 
+As per the RMA and force credit policy, all interbank failed transactions will be
+credited to the beneficiary’s account on the next working day if the beneficiary
+account is valid and active. Hence please allow us time for the payment to
+process. 
 
 Please allow us some time for the payment to process.""",
         "buttons": [
@@ -183,11 +186,11 @@ Please allow us some time for the payment to process.""",
     "MBOB_DEVICE_CHANGE": {
         "text": """<b>mBoB Device Change</b>
 
-An individual mBoB user can only access mBoB from one device at a time. If you have changed your device and wish to access mBoB on a new device, please:
-- Call us at our Toll-Free Number <b>1095</b> (Within Bhutan)
-- Or visit the nearest BoB branch. 
-
-<i>For customers residing abroad, please call us at ðŸ“ž +975-2-349903 or email the duly filled mBoB Change Request form to ðŸ“§ mbob@bob.bt</i>""",
+An individual mBoB user can only access mBoB from one device at a time. If
+you have changed your device and wish to access mBoB on a new device,
+please call us at our Toll-Free Number 1095 (Within Bhutan) or visit the nearest
+BoB branch. For customers residing abroad, please call us at +975-2-349903
+or email the duly filled mBoB Change Request form to mbob@bob.bt""",
         "buttons": [
             {"title": "Create Ticket", "payload": "RESOLVED_NO"},
             {"title": "Back To Menu", "payload": "FLOW_MBOB"}, {"title": "Main Menu", "payload": "MAIN_MENU"}
@@ -198,7 +201,7 @@ An individual mBoB user can only access mBoB from one device at a time. If you h
     "MBOB_LIMIT": {
         "text": """<b>Fund Transfer Limit</b>
 
-Following are the limit details for fund transfers:
+Following are the details:
 
 1. <b>Within BoB Accounts (Accounts with Signature)</b>: Unlimited. However, it depends on your mBoB Category:
    - <b>Gold Category</b>: Unlimited
@@ -220,12 +223,12 @@ Following are the limit details for fund transfers:
     "MBOB_CATEGORY": {
         "text": """<b>Check/Change Fund Transfer Category</b>
 
-To check or change your fund transfer category:
+To check your mBoB fund transfer category, follow the steps below:
 1. Login to <b>mBoB</b>
-2. Open <b>Menu</b>
-3. Tap <b>Change Category</b>
-4. View current category
-5. Change category""",
+2. Tap on the drop-down menu on the top left corner after successful login
+3. Tap “Change Category”. Your current category will be displayed at the top
+followed by the option to change your new Category.
+""",
         "buttons": [
             {"title": "Back To Menu", "payload": "FLOW_MBOB"}, {"title": "Main Menu", "payload": "MAIN_MENU"}
         ]
