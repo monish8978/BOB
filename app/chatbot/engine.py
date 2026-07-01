@@ -204,6 +204,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
         EXACT_MATCHES = {
             # Main Menu navigation
             "mbob": "FLOW_MBOB",
+            "mode": "FLOW_MBOB",
             "mbob services": "FLOW_MBOB",
             "1. mbob": "FLOW_MBOB",
             "cards": "FLOW_CARDS",
@@ -323,6 +324,13 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
                     "replacement fee": "DC_REPLACEMENT_FEE",
                     "block": "DC_BLOCK",
                     "activate": "DC_ACTIVATE",
+                    "more options": "PAGINATE_DEBIT_CARD_MENU_2",
+                    "previous options": "PAGINATE_DEBIT_CARD_MENU_1",
+                    "more option": "PAGINATE_DEBIT_CARD_MENU_2",
+                    "previous option": "PAGINATE_DEBIT_CARD_MENU_1",
+                    "more": "PAGINATE_DEBIT_CARD_MENU_2",
+                    "mode": "PAGINATE_DEBIT_CARD_MENU_2",
+                    "mode option": "PAGINATE_DEBIT_CARD_MENU_2",
                 }
                 if normalized in flow_matches:
                     payload = flow_matches[normalized]
@@ -343,6 +351,13 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
                     "bill": "CC_BILL",
                     "block": "CC_BLOCK",
                     "activate": "CC_ACTIVATE",
+                    "more options": "PAGINATE_CREDIT_CARD_MENU_2",
+                    "previous options": "PAGINATE_CREDIT_CARD_MENU_1",
+                    "more option": "PAGINATE_CREDIT_CARD_MENU_2",
+                    "previous option": "PAGINATE_CREDIT_CARD_MENU_1",
+                    "more": "PAGINATE_CREDIT_CARD_MENU_2",
+                    "mode": "PAGINATE_CREDIT_CARD_MENU_2",
+                    "mode option": "PAGINATE_CREDIT_CARD_MENU_2",
                 }
                 if normalized in flow_matches:
                     payload = flow_matches[normalized]
