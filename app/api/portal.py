@@ -19,6 +19,7 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
     Simulates sending messages to the chatbot directly from the frontend web widget.
     Persists history to MySQL and updates session states in Redis.
     """
+    logger.info(f"Simulating chat for {req}")
     user_id = req.sessionid
     query_str = req.query.strip()
     
@@ -61,6 +62,7 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
         await db.commit()
 
         # 4. Return formatted response
+        logger.info(f"Final bot reply payload for {user_id}: {bot_reply}")
         return ChatBotResponse(**bot_reply)
     except Exception as e:
         logger.error(f"Error in simulation engine: {e}")

@@ -8,6 +8,26 @@ from fastapi.templating import Jinja2Templates
 from app.config import settings
 from app.database import engine, Base
 from app.redis_client import redis_manager
+
+# ================= DEBUG BLOCK =================
+import sys
+print("================= DEBUG START =================", flush=True)
+try:
+    with open("/workspace/app/chatbot/flows.py", "r", encoding="utf-8") as f:
+        content = f.read()
+    print(f"flows.py size: {len(content)}", flush=True)
+    print(f"flows.py first 200 chars: {content[:200]!r}", flush=True)
+except Exception as e:
+    print(f"Error reading flows.py: {e}", flush=True)
+
+try:
+    import app.chatbot.flows as flows
+    print(f"flows attributes: {dir(flows)}", flush=True)
+except Exception as e:
+    print(f"Error importing flows: {e}", flush=True)
+print("================= DEBUG END =================", flush=True)
+# ===============================================
+
 from app.api.portal import router as portal_router
 
 # Configure structured logging

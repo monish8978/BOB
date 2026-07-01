@@ -1,9 +1,10 @@
 import random
 import logging
 import aiohttp
+import re
 from typing import Dict, Any, List
 from app.redis_client import redis_manager
-from app.chatbot.flows import *
+from app.chatbot.flows import MAIN_MENU, MBOB_MENU, CARDS_MENU, CREDIT_CARD_MENU, DEBIT_CARD_MENU, GOBOB_MENU, GOBOB_REG_MENU, ATS_MENU, FAQS
 from app.tasks import process_crm_ticket
 
 from app.config import settings
@@ -29,6 +30,18 @@ async def query_rag(query_text: str) -> str | None:
         logger.error(f"Error querying RAG API: {e}")
     return None
 
+def format_for_whatsapp(text: str) -> str:
+    """Converts standard markdown into WhatsApp-friendly text formatting."""
+    if not text:
+        return text
+    # Convert **bold** to <b>bold</b>
+    text = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', text)
+    # Convert ### Headers to *Headers*
+    text = re.sub(r'#{1,3}\s*(.*)', r'*\1*', text)
+    # Convert [Link Text](url) to Link Text: url
+    text = re.sub(r'\[(.*?)\]\((.*?)\)', r'\1: \2', text)
+    return text
+
 def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_replies: List[Dict[str, str]] = None) -> Dict[str, Any]:
     """
     Constructs the exact AdaptiveCard structure:
@@ -53,7 +66,7 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
             btn_obj = {
                 "id": b["payload"],
                 "title": b["title"],
-                "value": b["payload"],
+                "value": b["title"],
                 "payload": b["payload"]
             }
             choices.append(btn_obj)
@@ -63,7 +76,7 @@ def build_chat_response(text: str, buttons: List[Dict[str, str]] = None, quick_r
             qr_obj = {
                 "id": qr["payload"],
                 "title": qr["title"],
-                "value": qr["payload"],
+                "value": qr["title"],
                 "payload": qr["payload"]
             }
             choices.append(qr_obj)
@@ -133,9 +146,9 @@ def get_menu_card(menu_dict_or_id: Any, page: int = 1) -> Dict[str, Any]:
         formatted_buttons = [{"title": b["title"], "payload": b["payload"]} for b in page_buttons]
         
         if page > 1:
-            formatted_buttons.append({"title": "⬅️ Previous Options", "payload": f"PAGINATE_{menu_identifier}_{page-1}"})
+            formatted_buttons.append({"title": "â¬…ï¸ Previous Options", "payload": f"PAGINATE_{menu_identifier}_{page-1}"})
         if page < total_pages:
-            formatted_buttons.append({"title": "More Options ➡️", "payload": f"PAGINATE_{menu_identifier}_{page+1}"})
+            formatted_buttons.append({"title": "More Options âž¡ï¸", "payload": f"PAGINATE_{menu_identifier}_{page+1}"})
             
         formatted_buttons.append({"title": back_button["title"], "payload": back_button["payload"]})
             
@@ -356,17 +369,43 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             text="Please click the button below to open the support portal in your browser.",
             buttons=[
                 {"title": "Open Support Portal", "payload": settings.BOB_SUPPORT_URL},
+                {"title": "Back To Menu", "payload": "MAIN_MENU"},
                 {"title": "Main Menu", "payload": "MAIN_MENU"}
             ]
         )
+
+    # Connect to live agent
+    if payload == "CONNECT_TO_LIVE_AGENT" or (text and any(kw in text.lower() for kw in ["live agent", "connect to live", "human agent", "talk to human", "customer care"])):
+        await redis_manager.clear_session(user_id)
+        return {
+            "type": "adaptiveCard",
+            "responseType": "",
+            "body": [
+                {
+                    "type": "TextBlock",
+                    "text": "Hi ðŸ‘‹\n\nTo connect with a live agent, please click the \"Connect to Live\" button below.\n\nOur support team will assist you shortly.\n\nThank you for your patience ðŸ˜Š"
+                }
+            ],
+            "actions": [
+                {
+                    "type": "Action.Submit",
+                    "title": "Connect To Live",
+                    "id": "connectToLive",
+                    "value": "Connect To Live",
+                    "actionId": "9999.5006"
+                }
+            ]
+        }
 
     # RAG Integration for free-text questions
     if not payload and text and flow != "ticket_creation":
         rag_answer = await query_rag(text)
         if rag_answer:
+            rag_answer = format_for_whatsapp(rag_answer)
             return build_chat_response(
                 text=rag_answer,
                 buttons=[
+                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                     # {"title": "Still Facing Issue", "payload": "RESOLVED_NO"}
                 ]
@@ -384,30 +423,30 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             return get_menu_card(CARDS_MENU)
         elif payload == "FLOW_KYC":
             return build_chat_response(
-                text="""**Update your Latest KYC (Mobile, Email, Address, etc.)**
+                text=f"""<b>Update your Latest KYC (Mobile, Email, Address, etc.)</b>
 
 To keep your details updated with the bank, please fill in the following forms and submit them at your nearest branch:
-1. **Customer Information Change Form**
-2. **Customer Information Update Form**
-3. **mBoB Change Request Form**
+1. <b>Customer Information Change Form</b>
+2. <b>Customer Information Update Form</b>
+3. <b>mBoB Change Request Form</b>
 
-**If you are abroad:**
-- Please email the first two forms (**Customer Information Change & Update Forms**) to 📧 operations@bob.bt
-- Please email the **mBoB Change Request Form** to 📧 mbob@bob.bt
+<b>If you are abroad:</b>
+- Please email the first two forms (<b>Customer Information Change & Update Forms</b>) to ðŸ“§ operations@bob.bt
+- Please email the <b>mBoB Change Request Form</b> to ðŸ“§ mbob@bob.bt
 *(Note: Please send the emails from your registered email address).*
+\
+Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the website.
 """,
                 buttons=[
-                    {"title": "Open Website", "payload": settings.BOB_WEBSITE_URL},
+                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
         elif payload == "FLOW_DOWNLOAD_FORMS":
             return build_chat_response(
-                text="""**Download Forms**
-
-To download forms, please click the link below:""",
+                text=f"Download Forms\n\nTo download forms, please <link href='{settings.BOB_DOWNLOAD_FORMS_URL}'>Click Here</link>.",
                 buttons=[
-                    {"title": "Download Forms", "payload": settings.BOB_DOWNLOAD_FORMS_URL},
+                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -422,6 +461,7 @@ To download forms, please click the link below:""",
                 text="Savings account can be opened online via BoB website.\n\nSteps:\n\nUpdate NDI App details\nShare details with BoB\nFill form\nSubmit",
                 buttons=[
                     {"title": "Open Account Portal", "payload": "ACCT_PORTAL_OPEN"},
+                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -432,6 +472,7 @@ To download forms, please click the link below:""",
                 buttons=[
                     {"title": "New Customer", "payload": "LOAN_CUST_NEW"},
                     {"title": "Existing Customer", "payload": "LOAN_CUST_EXISTING"},
+                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -513,6 +554,7 @@ To download forms, please click the link below:""",
                 text=f"Formal online loan portal redirection configured for {cust_status} Customer.",
                 buttons=[
                     {"title": "Apply Loan", "payload": "LOAN_PORTAL_OPEN"},
+                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
