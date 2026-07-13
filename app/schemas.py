@@ -7,7 +7,7 @@ class MessageRequest(BaseModel):
     sessionid: str = Field(..., description="Unique chat session identifier")
     clientId: Optional[int] = Field(208, description="Client account identifier")
     botId: Optional[int] = Field(7777, description="Chat bot identifier")
-    extraParms: Optional[str] = Field(None, description="Serialized JSON or string of extra parameters")
+    extraParms: Optional[Any] = Field(None, description="Serialized JSON, string, or object of extra parameters")
 
 class ChatBotResponse(BaseModel):
     type: str = Field("adaptiveCard", description="Type of container structure")

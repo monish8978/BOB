@@ -235,7 +235,8 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             # Common/Standard Action words
             "home": "MAIN_MENU",
             "main menu": "MAIN_MENU",
-            "back menu": "MAIN_MENU",
+            "back menu": "BACK_TO_MENU",
+            "back to menu": "BACK_TO_MENU",
             "back to main menu": "MAIN_MENU",
             "create ticket": "RESOLVED_NO",
             "no": "RESOLVED_NO",
@@ -417,6 +418,24 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
         menu_id = "_".join(parts[1:-1])
         return get_menu_card(menu_id, page=page_num)
 
+    # Standard "Back to Menu" payload handler
+    if payload == "BACK_TO_MENU":
+        if flow == "mbob":
+            return get_menu_card(MBOB_MENU)
+        elif flow == "cards":
+            return get_menu_card(CARDS_MENU)
+        elif flow == "cards_credit":
+            return get_menu_card(CREDIT_CARD_MENU)
+        elif flow == "cards_debit":
+            return get_menu_card(DEBIT_CARD_MENU)
+        elif flow == "gobob":
+            return get_menu_card(GOBOB_MENU)
+        elif flow == "ats":
+            return get_menu_card(ATS_MENU)
+        else:
+            await redis_manager.clear_session(user_id)
+            return get_menu_card(MAIN_MENU)
+
     # Standard "Reset/Main Menu" payload handlers
     if payload == "MAIN_MENU" or text.lower() in ["home", "main menu", "hi", "hello", "start"]:
         await redis_manager.clear_session(user_id)
@@ -428,11 +447,10 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
 
     # Trigger support ticket creation
     if payload == "RESOLVED_NO" or text.lower() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support", "create support ticket"]:
-        await redis_manager.clear_session(user_id)
         return build_chat_response(
             text=f"To open the support portal in your browser, please <link href='{settings.BOB_SUPPORT_URL}'>Click Here</link>.",
             buttons=[
-                {"title": "Back To Menu", "payload": "MAIN_MENU"},
+                {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
                 {"title": "Main Menu", "payload": "MAIN_MENU"}
             ]
         )
@@ -476,7 +494,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
             return build_chat_response(
                 text=rag_answer,
                 buttons=[
-                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
+                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -508,7 +526,7 @@ To keep your details updated with the bank, please fill in the following forms a
 Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the website.
 """,
                 buttons=[
-                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
+                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -516,7 +534,7 @@ Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the web
             return build_chat_response(
                 text=f"Download Forms\n\nTo download forms, please <link href='{settings.BOB_DOWNLOAD_FORMS_URL}'>Click Here</link>.",
                 buttons=[
-                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
+                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -531,7 +549,7 @@ Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the web
                 text=f"""Savings deposit account can be opened online via our website at <link href='{settings.BOB_WEBSITE_URL}'>www.bob.bt</link> – Bob account online. Before opening online, please add your current address, Phone number and email address in the Bhutan NDI App. Scan the NDI App, BOB will request to share your data via NDI. Please share it and fill up the account opening form on your screen and complete the process.
 To open a BoB account online, please <link href='{settings.BOB_ACCOUNT_URL}'>Click Here</link>.""",
                 buttons=[
-                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
+                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -541,7 +559,7 @@ To open a BoB account online, please <link href='{settings.BOB_ACCOUNT_URL}'>Cli
                 text=f"""You can apply for Loans online via our website at <link href='{settings.BOB_WEBSITE_URL}'>www.bob.bt</link> – Bob Loan Apply online and select the type of loan that you wish to apply for. Please choose “NEW CUSTOMER” If you currently donot have an account with the bank. If you already have an account with the bank then please choose “Existing customer” and complete the process.
 To apply for a BoB Loan online, please <link href='{settings.BOB_LOAN_URL}'>Click Here</link>.""",
                 buttons=[
-                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
+                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )
@@ -618,12 +636,11 @@ To apply for a BoB Loan online, please <link href='{settings.BOB_LOAN_URL}'>Clic
     elif flow == "loan_apply":
         if payload in ["LOAN_CUST_NEW", "LOAN_CUST_EXISTING"]:
             cust_status = "New" if payload == "LOAN_CUST_NEW" else "Existing"
-            await redis_manager.clear_session(user_id)
             return build_chat_response(
                 text=f"Formal online loan portal redirection configured for {cust_status} Customer.",
                 buttons=[
                     {"title": "Apply Loan", "payload": "LOAN_PORTAL_OPEN"},
-                    {"title": "Back To Menu", "payload": "MAIN_MENU"},
+                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
                     {"title": "Main Menu", "payload": "MAIN_MENU"}
                 ]
             )

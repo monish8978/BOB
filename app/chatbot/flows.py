@@ -22,7 +22,7 @@ MBOB_MENU = {
     "buttons": [
         {"title": "Registration", "payload": "MBOB_REGISTRATION"},
         {"title": "Login Access Blocked", "payload": "MBOB_LOGIN_BLOCKED"},
-        {"title": "Fund transfer failed to other banks", "payload": "MBOB_TX_FAILED"},
+        {"title": "Other bank txn failed", "payload": "MBOB_TX_FAILED"},
         {"title": "Device Change", "payload": "MBOB_DEVICE_CHANGE"},
         {"title": "Fund Transfer Limit", "payload": "MBOB_LIMIT"},
         {"title": "Check/Change Category", "payload": "MBOB_CATEGORY"}

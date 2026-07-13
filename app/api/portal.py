@@ -19,8 +19,19 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
     Simulates sending messages to the chatbot directly from the frontend web widget.
     Persists history to MySQL and updates session states in Redis.
     """
-    logger.info(f"Simulating chat for {req}")
     user_id = req.sessionid
+    if req.extraParms:
+        try:
+            if isinstance(req.extraParms, str):
+                import json
+                extra_data = json.loads(req.extraParms)
+            else:
+                extra_data = req.extraParms
+            if isinstance(extra_data, dict) and "csid" in extra_data and extra_data["csid"]:
+                user_id = str(extra_data["csid"])
+        except Exception as e:
+            logger.warning(f"Failed to parse extraParms: {e}")
+
     query_str = req.query.strip()
     
     # Check if query is actually a payload (e.g. MBOB_REGISTRATION or FLOW_MBOB)

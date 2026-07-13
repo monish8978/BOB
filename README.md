@@ -88,15 +88,21 @@ The chatbot implements 100% of the bank's user scenarios:
 You can interact with the chatbot engine, retrieve ticket audits, and view conversation histories using the following endpoints:
 
 ### 1. Process Dialogue / Dialogue Simulator
-This endpoint simulates sending user messages or button clicks to the state machine engine:
+This endpoint simulates sending user messages or button clicks to the state machine engine.
+
+> [!NOTE]
+> If a `csid` key is provided within `extraParms` (as a serialized JSON string or dictionary), it will be extracted and used as the unique session identifier (`user_id`) for dialogue state tracking and database logging, overriding the default `sessionid` field.
 
 ```bash
 curl -X POST "http://localhost:9101/api/simulate" \
      -H "Content-Type: application/json" \
      -d '{
-       "user_id": "BOB-USER-99",
-       "message": "Signature Account",
-       "payload": "MBOB_REG_SIG"
+       "query": "Hi",
+       "app_id": "1010",
+       "sessionid": "1",
+       "clientId": 259,
+       "botId": 1010,
+       "extraParms": "{\"source\":\"other\",\"csid\":\"2591783598124128\",\"identifier\":\"919765785790\"}"
      }'
 ```
 
