@@ -94,15 +94,12 @@ This endpoint simulates sending user messages or button clicks to the state mach
 > If a `csid` key is provided within `extraParms` (as a serialized JSON string or dictionary), it will be extracted and used as the unique session identifier (`user_id`) for dialogue state tracking and database logging, overriding the default `sessionid` field.
 
 ```bash
-curl -X POST "http://localhost:9101/api/simulate" \
-     -H "Content-Type: application/json" \
-     -d '{
+curl --location 'http://localhost:9101/api/bob' \
+--header 'Content-Type: application/json' \
+--data '{
        "query": "Hi",
-       "app_id": "1010",
-       "sessionid": "1",
-       "clientId": 259,
-       "botId": 1010,
-       "extraParms": "{\"source\":\"other\",\"csid\":\"2591783598124128\",\"identifier\":\"919765785790\"}"
+       "app_id": "3333",
+       "extraParms": "{\"source\":\"webchat\",\"csid\":\"2591783598124128\",\"identifier\":\"919765785790\"}"
      }'
 ```
 
@@ -117,12 +114,12 @@ curl -X GET "http://localhost:9101/api/tickets"
 Retrieve the complete conversation message stream for a specific session:
 
 ```bash
-curl -X GET "http://localhost:9101/api/logs/BOB-USER-99"
+curl -X GET "http://localhost:9101/api/logs/1"
 ```
 
 ### 4. Reset User Session State
 Clears active Redis session states and deletes transactional message logs for clean validation tests:
 
 ```bash
-curl -X POST "http://localhost:9101/api/reset/BOB-USER-99"
+curl -X POST "http://localhost:9101/api/reset/1"
 ```

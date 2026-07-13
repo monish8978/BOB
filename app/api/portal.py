@@ -13,13 +13,13 @@ from app.chatbot.engine import process_user_message
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-@router.post("/simulate", response_model=ChatBotResponse)
+@router.post("/bob", response_model=ChatBotResponse)
 async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db)):
     """
     Simulates sending messages to the chatbot directly from the frontend web widget.
     Persists history to MySQL and updates session states in Redis.
     """
-    user_id = req.sessionid
+    user_id = req.sessionid or "1"
     if req.extraParms:
         try:
             if isinstance(req.extraParms, str):

@@ -1,5 +1,5 @@
 // State configuration for simulator client
-const MOCK_USER_ID = "BOB-USER-99";
+const MOCK_USER_ID = "1";
 const chatMessages = document.getElementById("chat-messages");
 const chatInput = document.getElementById("chat-input");
 const quickRepliesContainer = document.getElementById("quick-replies");
@@ -85,17 +85,17 @@ async function submitMessage(message, payload) {
     const typingIndicator = appendTypingIndicator();
     
     try {
-        const response = await fetch("/api/simulate", {
+        const response = await fetch("/api/bob", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 query: payload || message || "",
-                app_id: "7777",
+                app_id: "3333",
                 sessionid: MOCK_USER_ID,
-                clientId: 208,
-                botId: 7777,
+                clientId: 259,
+                botId: 3333,
                 extraParms: JSON.stringify({ source: "webchat", csid: "731779738973688" })
             })
         });
@@ -197,27 +197,48 @@ function appendBotResponse(data) {
 function formatMarkdown(text) {
     if (!text) return "";
     
+    // 1. Basic HTML escaping for security
     let html = text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
         
-    // Bold formats
+    // 2. Restore/render whitelisted HTML tags from the API response
+    // Restore bold: <b> / </b> and <strong> / </strong>
+    html = html.replace(/&lt;b&gt;(.*?)&lt;\/b&gt;/gi, "<strong>$1</strong>");
+    html = html.replace(/&lt;strong&gt;(.*?)&lt;\/strong&gt;/gi, "<strong>$1</strong>");
+    
+    // Restore line breaks: <br> and <br />
+    html = html.replace(/&lt;br\s*\/?&gt;/gi, "<br>");
+    
+    // Restore lists: <li> / </li>
+    html = html.replace(/&lt;li&gt;(.*?)&lt;\/li&gt;/gi, "<li>$1</li>");
+    
+    // Restore custom and standard links: <link href="...">...</link> or <a href="...">...</a>
+    html = html.replace(/&lt;link\s+href=['"](.*?)['"]\s*&gt;(.*?)&lt;\/link&gt;/gi, '<a href="$1" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">$2</a>');
+    html = html.replace(/&lt;a\s+href=['"](.*?)['"]\s*&gt;(.*?)&lt;\/a&gt;/gi, '<a href="$1" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">$2</a>');
+
+    // 3. Render Markdown structures
+    // Markdown bold: **bold**
     html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    html = html.replace(/\*(.*?)\*/g, "<strong>$1</strong>");
+    
+    // Markdown bold/italic: *italic* or *bold* (only if not part of a list item bullet)
+    html = html.replace(/\*(?!\s)(.*?)\*/g, "<strong>$1</strong>");
     
     // Newlines conversion
     html = html.replace(/\n/g, "<br>");
     
-    // Bullet formats
-    html = html.replace(/•\s(.*?)(<br>|$)/g, "<li>$1</li>");
-    html = html.replace(/-\s(.*?)(<br>|$)/g, "<li>$1</li>");
+    // Bullet formats: •, -, or * at the beginning of a line or after a <br>
+    html = html.replace(/(?:^|<br>)[•\-\*]\s+(.*?)(?=<br>|$)/g, "<br><li>$1</li>");
     
-    // 1. Parse markdown links [text](url)
+    // Markdown links: [text](url)
     html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">$1</a>');
     
-    // 2. Convert raw URLs to links (excluding those already inside href or parenthesis)
+    // 4. Convert raw URLs to links (excluding those already inside href, src, or parenthesis)
     html = html.replace(/(?<!href=\")(?<!href=\')(?<!\()(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" style="color: var(--accent-gold); text-decoration: underline;">$1</a>');
+    
+    // Clean up empty lines or duplicate breaks around lists if any
+    html = html.replace(/(<br>){2,}(<li>)/g, "<br>$2");
     
     return html;
 }

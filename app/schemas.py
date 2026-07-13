@@ -3,10 +3,10 @@ from typing import List, Optional, Dict, Any
 
 class MessageRequest(BaseModel):
     query: str = Field(..., description="Plain text user message or button payload identifier")
-    app_id: Optional[str] = Field("7777", description="App application identifier")
-    sessionid: str = Field(..., description="Unique chat session identifier")
-    clientId: Optional[int] = Field(208, description="Client account identifier")
-    botId: Optional[int] = Field(7777, description="Chat bot identifier")
+    app_id: Optional[str] = Field("3333", description="App application identifier")
+    sessionid: Optional[str] = Field("1", description="Unique chat session identifier")
+    clientId: Optional[int] = Field(259, description="Client account identifier")
+    botId: Optional[int] = Field(3333, description="Chat bot identifier")
     extraParms: Optional[Any] = Field(None, description="Serialized JSON, string, or object of extra parameters")
 
 class ChatBotResponse(BaseModel):
