@@ -183,7 +183,7 @@ def get_faq_card(faq_key: str) -> Dict[str, Any]:
         quick_replies=quick_replies
     )
 
-async def process_user_message(user_id: str, text: str, payload: str = None) -> Dict[str, Any]:
+async def process_user_message(user_id: str, text: str, payload: str = None, source: str = None) -> Dict[str, Any]:
     """
     Main state machine routing incoming text or button payloads for a user session.
     Returns standard simple JSON responses matching user flow specification.
@@ -466,25 +466,58 @@ async def process_user_message(user_id: str, text: str, payload: str = None) -> 
         )
     ):
         await redis_manager.clear_session(user_id)
-        return {
-            "type": "adaptiveCard",
-            "responseType": "",
-            "body": [
-                {
-                    "type": "TextBlock",
-                    "text": "Hi!\n\nTo connect with a live agent, please click the \"<b>Connect to Live</b>\" button below.\n\nOur support team will assist you shortly.\n\nThank you for your patience!"
-                }
-            ],
-            "actions": [
-                {
-                    "type": "Action.Submit",
-                    "title": "Connect To Live",
-                    "id": "connectToLive",
-                    "value": "Connect To Live",
-                    "actionId": "9999.5006"
-                }
-            ]
-        }
+        if source == "whatsappchat":
+            return {
+                "type": "adaptiveCard",
+                "responseType": "",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "text": "Hi!\n\nTo connect with a live agent, please click the \"<b>Connect to Live</b>\" button below.\n\nOur support team will assist you shortly.\n\nThank you for your patience!"
+                    },
+                    {
+                        "type": "Button",
+                        "id": "serviceType",
+                        "style": "expanded",
+                        "choices": [
+                            {
+                                "id": "Connect To Live",
+                                "title": "Connect To Live",
+                                "value": "Connect To Live"
+                            }
+                        ]
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.Submit",
+                        "title": "Connect To Live",
+                        "id": "connectToLive",
+                        "value": "Connect To Live",
+                        "actionId": settings.LIVE_AGENT_ACTION_ID
+                    }
+                ]
+            }
+        else:
+            return {
+                "type": "adaptiveCard",
+                "responseType": "",
+                "body": [
+                    {
+                        "type": "TextBlock",
+                        "text": "Hi!\n\nTo connect with a live agent, please click the \"<b>Connect to Live</b>\" button below.\n\nOur support team will assist you shortly.\n\nThank you for your patience!"
+                    }
+                ],
+                "actions": [
+                    {
+                        "type": "Action.Submit",
+                        "title": "Connect To Live",
+                        "id": "connectToLive",
+                        "value": "Connect To Live",
+                        "actionId": settings.LIVE_AGENT_ACTION_ID
+                    }
+                ]
+            }
 
     # RAG Integration for free-text questions
     if not payload and text and flow != "ticket_creation":

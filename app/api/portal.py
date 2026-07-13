@@ -20,6 +20,7 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
     Persists history to MySQL and updates session states in Redis.
     """
     user_id = req.sessionid or "1"
+    source = None
     if req.extraParms:
         try:
             if isinstance(req.extraParms, str):
@@ -27,8 +28,10 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
                 extra_data = json.loads(req.extraParms)
             else:
                 extra_data = req.extraParms
-            if isinstance(extra_data, dict) and "csid" in extra_data and extra_data["csid"]:
-                user_id = str(extra_data["csid"])
+            if isinstance(extra_data, dict):
+                if "csid" in extra_data and extra_data["csid"]:
+                    user_id = str(extra_data["csid"])
+                source = extra_data.get("source")
         except Exception as e:
             logger.warning(f"Failed to parse extraParms: {e}")
 
@@ -55,7 +58,7 @@ async def simulate_chat(req: MessageRequest, db: AsyncSession = Depends(get_db))
 
     try:
         # 2. Process message via finite state machine
-        bot_reply = await process_user_message(user_id, message_text, payload)
+        bot_reply = await process_user_message(user_id, message_text, payload, source)
 
         # 3. Log outgoing bot message
         body_list = bot_reply.get("body", [])
