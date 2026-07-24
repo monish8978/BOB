@@ -275,6 +275,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
             "ats cash": "ATS_CASH",
             "ats add to card": "ATS_FAQ_CARD",
             "ats for minor": "ATS_FAQ_MINOR",
+            "ats to third person": "ATS_FAQ_THIRD_PERSON",
             "ats expiry": "ATS_FAQ_EXPIRY",
 
             # Cards general & Credit Card options
@@ -384,6 +385,8 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
                     "card": "ATS_FAQ_CARD",
                     "cash": "ATS_CASH",
                     "avail": "ATS_AVAIL",
+                    "third person": "ATS_FAQ_THIRD_PERSON",
+                    "ats to third person": "ATS_FAQ_THIRD_PERSON",
                 }
                 if normalized in flow_matches:
                     payload = flow_matches[normalized]
@@ -552,8 +555,8 @@ To keep your details updated with the bank, please fill in the following forms a
 3. <b>mBoB Change Request Form</b>
 
 <b>If you are abroad:</b>
-- Please email the first two forms (<b>Customer Information Change & Update Forms</b>) to ðŸ“§ operations@bob.bt
-- Please email the <b>mBoB Change Request Form</b> to ðŸ“§ mbob@bob.bt
+- Please email the first two forms (<b>Customer Information Change & Update Forms</b>) to 📧 operations@bob.bt
+- Please email the <b>mBoB Change Request Form</b> to 📧 mbob@bob.bt
 *(Note: Please send the emails from your registered email address).*
 \
 Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the website.

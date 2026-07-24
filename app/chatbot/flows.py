@@ -1,4 +1,4 @@
-﻿# BOB Bank Chatbot Static Menus and FAQ Responses (Spec-Aligned Copy)
+# BOB Bank Chatbot Static Menus and FAQ Responses (Spec-Aligned Copy)
 
 # Main Menu Options
 MAIN_MENU = {
@@ -117,6 +117,7 @@ ATS_MENU = {
         {"title": "ATS Cash", "payload": "ATS_CASH"},
         {"title": "ATS Add to Card", "payload": "ATS_FAQ_CARD"},
         {"title": "ATS for Minor", "payload": "ATS_FAQ_MINOR"},
+        {"title": "ATS to Third person", "payload": "ATS_FAQ_THIRD_PERSON"},
         {"title": "ATS Expiry", "payload": "ATS_FAQ_EXPIRY"},
         {"title": "Main Menu", "payload": "MAIN_MENU"}
     ]
@@ -312,25 +313,25 @@ To activate the card, login to mBoB > select cards > credit card > activate > se
     "DC_TYPES": {
         "text": """<b>Types of Debit Cards</b>
 
-Proprietary Debit card â€“ Valid within Bhutan only.
-Visa Domestic debit card â€“ Valid in Bhutan, India & Nepal.
-Visa International debit card (Public) â€“ Valid outside Bhutan, India & Nepal.
-Visa International debit card (Student) â€“ Valid outside Bhutan, India & Nepal.""",
+Proprietary Debit card – Valid within Bhutan only.
+Visa Domestic debit card – Valid in Bhutan, India & Nepal.
+Visa International debit card (Public) – Valid outside Bhutan, India & Nepal.
+Visa International debit card (Student) – Valid outside Bhutan, India & Nepal.""",
         "buttons": [{"title": "Back To Menu", "payload": "CARD_DEBIT"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "DC_STUDENT": {
-        "text": "The student card is issued to suffice your living expenses abroad. Therefore, upon issuance of the card, bank will not remit or bank transfer your monthly living allowance and vice versa. Card validity is based on applicant studentâ€™s study period up to 4 years.",
+        "text": "The student card is issued to suffice your living expenses abroad. Therefore, upon issuance of the card, bank will not remit or bank transfer your monthly living allowance and vice versa. Card validity is based on applicant student’s study period up to 4 years.",
         "buttons": [{"title": "Back To Menu", "payload": "CARD_DEBIT"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "DC_DOCS_STUDENT": {
         "text": """<b>Documentation - Visa International debit card (Student)</b>
 
-â— Valid passport copy
-â— Duly filled application or renewal forms
-â— University admission/enrollment letter
-â— Valid visa/permits (for future students)
-â— Valid visa/permits (for current students).
-â— Student ID""",
+• Valid passport copy
+• Duly filled application or renewal forms
+• University admission/enrollment letter
+• Valid visa/permits (for future students)
+• Valid visa/permits (for current students).
+• Student ID""",
         "buttons": [{"title": "Back To Menu", "payload": "CARD_DEBIT"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "DC_ELIGIBILITY_DOM": {
@@ -343,12 +344,12 @@ Visa International debit card (Student) â€“ Valid outside Bhutan, India & N
 Cardholders may utilize funds up to their available account balance, subject to the transaction limit as below.
 
 Cash Withdrawal:
-â— Nu. 15,000 per transaction. Up to Nu.40,000 per day in BOB ATMs & Nu.30,000 per day in BFS ATMs.
-â— INR 10,000 Per day and up to INR 15,000 per month in India/Nepal.
+• Nu. 15,000 per transaction. Up to Nu.40,000 per day in BOB ATMs & Nu.30,000 per day in BFS ATMs.
+• INR 10,000 Per day and up to INR 15,000 per month in India/Nepal.
 
 POS:
-â— Nu. 500,000 Per transaction in BOB - POS Terminals with unlimited daily/monthly limit.
-â— INR 50,000 per month in POS - Visa Network Terminals in India/Nepal.""",
+• Nu. 500,000 Per transaction in BOB - POS Terminals with unlimited daily/monthly limit.
+• INR 50,000 per month in POS - Visa Network Terminals in India/Nepal.""",
         "buttons": [{"title": "Back To Menu", "payload": "CARD_DEBIT"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "DC_ELIGIBILITY_INTL": {
@@ -400,10 +401,12 @@ GoBoB is a digital wallet service offered by the Bank of Bhutan. It enables user
 
 To reset MPIN or unblock login access to goBoB:
 1. Open <b>goBoB App</b>
-2. Tap <b>â€œForgot M-PINâ€</b> option on the login page and login with OTP. 
+2. Tap <b>“Forgot M-PIN”</b> option on the login page and login with OTP. 
 
-<i>Note: If you receive an error message such as â€œEntered details are not validâ€, please prepare a copy of your CID or family tree (in case of a minor) and visit the nearest BoBL branch.</i>""",
-        "buttons": [{"title": "Back To Menu", "payload": "FLOW_GOBOB"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
+<i>Note: If you receive an error message such as “Entered details are not valid”, please prepare a copy of your CID or family tree (in case of a minor) and visit the nearest BoBL branch.</i>""",
+        "buttons": [
+            {"title": "Back To Menu", "payload": "FLOW_GOBOB"}, {"title": "Main Menu", "payload": "MAIN_MENU"}
+        ]
     },
     "GOBOB_REG": {
         "text": """<b>Registration - goBoB</b>
@@ -426,7 +429,7 @@ Tourists can conveniently register for the goBoB wallet even before arriving in 
     "GOBOB_TOURIST_KYC": {
         "text": """<b>KYC verification for Tourist Customers</b>
 
-The tourist customer can load money into the wallet but will not be able to initiate any transactions from the wallet unless KYC is verified. The Tourist KYC is verified with the Department of Immigration (DOI). Verification needs to be initiated by the customer through â€˜Verify KYCâ€™ option available under Appâ€™s settings. KYC verification with DOI is instant. However, the customer must ensure that their personal information is correctly provided during the registration. Upon successful KYC verification, the customer can initiate transactions in a seamless manner.""",
+The tourist customer can load money into the wallet but will not be able to initiate any transactions from the wallet unless KYC is verified. The Tourist KYC is verified with the Department of Immigration (DOI). Verification needs to be initiated by the customer through ‘Verify KYC’ option available under App’s settings. KYC verification with DOI is instant. However, the customer must ensure that their personal information is correctly provided during the registration. Upon successful KYC verification, the customer can initiate transactions in a seamless manner.""",
         "buttons": [{"title": "Back To Menu", "payload": "GOBOB_REG_MENU"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "GOBOB_KYC": {
@@ -489,43 +492,52 @@ The refund will be accepted & processed only if the amount was previously loaded
     "ATS_FAQ_WHAT": {
         "text": """<b>What is ATS?</b>
 
-Automated Transfer System configures standing instructions for automated loan or bill clearings.""",
+The ATS is an additional Spending quota/opportunity (beyond the standard USD 1,000 limit) to do international transactions.""",
         "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "ATS_AVAIL": {
         "text": """<b>Avail ATS</b>
 
-You can configure ATS standing instruction directly inside internet banking or by visiting a branch.""",
+To avail ATS on Card, you need to provide valid passport copy and confirmed air ticket to Third Countries one week prior to your departure date.
+ATS requests on card submitted post-departure shall not be accepted.""",
         "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "ATS_FAQ_LIMIT": {
         "text": """<b>ATS Limit</b>
 
-ATS transactional limit is dictated by your savings or current account balance standing.""",
+The yearly limit is USD 3,000 per individual (USD 1,000 in cash & USD 2,000 can be added to international cards).""",
         "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "ATS_CASH": {
-        "text": """<b>ATS Cash</b>
+        "text": """<b>For ATS - Cash</b>
 
-Standing instructions can trigger cash accumulation sweeps to designated savings categories automatically.""",
+You can avail USD 1,000 Cash from the Paro International Airport, BoB counter during the departure time.""",
         "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "ATS_FAQ_CARD": {
-        "text": """<b>ATS Add to Card</b>
+        "text": """<b>For ATS – Add to Cards</b>
 
-Link your credit card bill payments directly to ATS for automated monthly clearing sweeps.""",
+Email the details and documents to:
+• <b>International Debit Card</b>: debitcard@bob.bt
+• <b>International Credit Card</b>: creditcard@bob.bt""",
         "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "ATS_FAQ_MINOR": {
-        "text": """<b>ATS for Minor</b>
+        "text": """<b>ATS to minors who do not have a card</b>
 
-ATS is valid for minor savings accounts when authenticated by natural guardians in writing.""",
+Minors below the age of 18 can avail the Annual Travel Scheme of USD 2,000 or USD 3,000 through their parent’s or guardian’s card, upon submission of the family tree, passport, and latest air ticket.""",
+        "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
+    },
+    "ATS_FAQ_THIRD_PERSON": {
+        "text": """<b>ATS to Third person</b>
+
+The ATS cannot be added to another person’s card. Currently it's only approved for minors below 18 through their parent’s or guardian’s card.""",
         "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "ATS_FAQ_EXPIRY": {
         "text": """<b>ATS Expiry</b>
 
-Standing instructions persist until specified cancellation criteria are met or the time period expires.""",
+ATS is only valid for the current year. Unused ATS shall not be carried forward to the next calendar year.""",
         "buttons": [{"title": "Back To Menu", "payload": "FLOW_ATS"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     }
 }

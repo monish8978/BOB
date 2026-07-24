@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     BOB_LOAN_URL: str = "https://bobloan.bob.bt/dlp/#/dashboard"
 
     # Live Agent Settings
-    LIVE_AGENT_ACTION_ID: str = "9999.5006"
+    LIVE_AGENT_ACTION_ID: str = "3333.5006"
 
     class Config:
         env_file = ".env"
