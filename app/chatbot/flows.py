@@ -25,7 +25,8 @@ MBOB_MENU = {
         {"title": "Other bank txn failed", "payload": "MBOB_TX_FAILED"},
         {"title": "Device Change", "payload": "MBOB_DEVICE_CHANGE"},
         {"title": "Fund Transfer Limit", "payload": "MBOB_LIMIT"},
-        {"title": "Check/Change Category", "payload": "MBOB_CATEGORY"}
+        {"title": "Check/Change Category", "payload": "MBOB_CATEGORY"},
+        {"title": "Main Menu", "payload": "MAIN_MENU"}
     ]
 }
 
