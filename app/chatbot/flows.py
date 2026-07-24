@@ -300,7 +300,7 @@ To activate the card, login to mBoB > select cards > credit card > activate > se
 
     # DEBIT CARD SPECS
     "DC_ISSUANCE_FEE": {
-        "text": "The issuance Fee of debit card is Nu.315 Per Card.",
+        "text": "The issuance Fee of debit card is Nu.315 Per Card.You can apply this using mBoB.",
         "buttons": [{"title": "Back To Menu", "payload": "CARD_DEBIT"}, {"title": "Main Menu", "payload": "MAIN_MENU"}]
     },
     "DC_REPLACEMENT_FEE": {
