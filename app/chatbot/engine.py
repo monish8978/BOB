@@ -432,7 +432,10 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
         elif flow == "cards_debit":
             return get_menu_card(DEBIT_CARD_MENU)
         elif flow == "gobob":
-            return get_menu_card(GOBOB_MENU)
+            if step == "registration_menu":
+                return get_menu_card(GOBOB_REG_MENU)
+            else:
+                return get_menu_card(GOBOB_MENU)
         elif flow == "ats":
             return get_menu_card(ATS_MENU)
         else:
@@ -651,10 +654,12 @@ To apply for a BoB Loan online, please <link href='{settings.BOB_LOAN_URL}'>Clic
     # ==========================================
     elif flow == "gobob":
         if payload == "GOBOB_REG_MENU":
+            await redis_manager.update_session(user_id, flow="gobob", step="registration_menu")
             return get_menu_card(GOBOB_REG_MENU)
         elif payload in FAQS:
             return get_faq_card(payload)
         else:
+            await redis_manager.update_session(user_id, flow="gobob", step="menu")
             return get_menu_card(GOBOB_MENU)
 
     # ==========================================
