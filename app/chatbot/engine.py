@@ -453,13 +453,22 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
     if payload in FAQS:
         return get_faq_card(payload)
 
-    # Trigger support ticket creation
+    # Yes resolution: close the chat
+    if payload == "RESOLVED_YES":
+        await redis_manager.clear_session(user_id)
+        return build_chat_response(
+            text="Thank you! The chat has been closed. Say 'Hi' or 'Main Menu' to start a new chat.",
+            buttons=[
+                {"title": "Main Menu", "payload": "MAIN_MENU"}
+            ]
+        )
+
+    # Trigger support ticket creation / Connect to Agent
     if payload == "RESOLVED_NO" or text.lower() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support", "create support ticket"]:
         return build_chat_response(
-            text=f"To open the support portal in your browser, please <link href='{settings.BOB_SUPPORT_URL}'>Click Here</link>.",
+            text="Click Below (Connect with live Agent)",
             buttons=[
-                {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
-                {"title": "Main Menu", "payload": "MAIN_MENU"}
+                {"title": "Connect with Agent", "payload": "CONNECT_TO_LIVE_AGENT"}
             ]
         )
 
@@ -532,11 +541,13 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
         rag_answer = await query_rag(text)
         if rag_answer:
             rag_answer = format_for_whatsapp(rag_answer)
+            # Append resolution check prompt
+            rag_answer += "\n\nPlease let us know if you are satisfied with the resolution."
             return build_chat_response(
                 text=rag_answer,
                 buttons=[
-                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
-                    {"title": "Main Menu", "payload": "MAIN_MENU"}
+                    {"title": "Yes", "payload": "RESOLVED_YES"},
+                    {"title": "No", "payload": "RESOLVED_NO"}
                 ]
             )
 
@@ -565,18 +576,19 @@ To keep your details updated with the bank, please fill in the following forms a
 *(Note: Please send the emails from your registered email address).*
 \
 Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the website.
-""",
+
+Please let us know if you are satisfied with the resolution.""",
                 buttons=[
-                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
-                    {"title": "Main Menu", "payload": "MAIN_MENU"}
+                    {"title": "Yes", "payload": "RESOLVED_YES"},
+                    {"title": "No", "payload": "RESOLVED_NO"}
                 ]
             )
         elif payload == "FLOW_DOWNLOAD_FORMS":
             return build_chat_response(
-                text=f"Download Forms\n\nTo download forms, please <link href='{settings.BOB_DOWNLOAD_FORMS_URL}'>Click Here</link>.",
+                text=f"Download Forms\n\nTo download forms, please <link href='{settings.BOB_DOWNLOAD_FORMS_URL}'>Click Here</link>.\n\nPlease let us know if you are satisfied with the resolution.",
                 buttons=[
-                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
-                    {"title": "Main Menu", "payload": "MAIN_MENU"}
+                    {"title": "Yes", "payload": "RESOLVED_YES"},
+                    {"title": "No", "payload": "RESOLVED_NO"}
                 ]
             )
         elif payload == "FLOW_GOBOB":
@@ -588,20 +600,23 @@ Please <link href='{settings.BOB_WEBSITE_URL}'>Click Here</link> to open the web
         elif payload == "FLOW_LOANS_ACCTS":
             return build_chat_response(
                 text=f"""Savings deposit account can be opened online via our website at <link href='{settings.BOB_WEBSITE_URL}'>www.bob.bt</link> – Bob account online. Before opening online, please add your current address, Phone number and email address in the Bhutan NDI App. Scan the NDI App, BOB will request to share your data via NDI. Please share it and fill up the account opening form on your screen and complete the process.
-To open a BoB account online, please <link href='{settings.BOB_ACCOUNT_URL}'>Click Here</link>.""",
+To open a BoB account online, please <link href='{settings.BOB_ACCOUNT_URL}'>Click Here</link>.
+
+Please let us know if you are satisfied with the resolution.""",
                 buttons=[
-                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
-                    {"title": "Main Menu", "payload": "MAIN_MENU"}
+                    {"title": "Yes", "payload": "RESOLVED_YES"},
+                    {"title": "No", "payload": "RESOLVED_NO"}
                 ]
             )
         elif payload == "FLOW_LOAN_APPLY":
-            await redis_manager.update_session(user_id, flow="loan_apply", step="awaiting_customer_type")
             return build_chat_response(
                 text=f"""You can apply for Loans online via our website at <link href='{settings.BOB_WEBSITE_URL}'>www.bob.bt</link> – Bob Loan Apply online and select the type of loan that you wish to apply for. Please choose “NEW CUSTOMER” If you currently donot have an account with the bank. If you already have an account with the bank then please choose “Existing customer” and complete the process.
-To apply for a BoB Loan online, please <link href='{settings.BOB_LOAN_URL}'>Click Here</link>.""",
+To apply for a BoB Loan online, please <link href='{settings.BOB_LOAN_URL}'>Click Here</link>.
+
+Please let us know if you are satisfied with the resolution.""",
                 buttons=[
-                    {"title": "Back To Menu", "payload": "BACK_TO_MENU"},
-                    {"title": "Main Menu", "payload": "MAIN_MENU"}
+                    {"title": "Yes", "payload": "RESOLVED_YES"},
+                    {"title": "No", "payload": "RESOLVED_NO"}
                 ]
             )
         else:
