@@ -239,6 +239,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
             "back to menu": "BACK_TO_MENU",
             "back to main menu": "MAIN_MENU",
             "create ticket": "RESOLVED_NO",
+            "yes": "RESOLVED_YES",
             "no": "RESOLVED_NO",
             "still facing issue": "RESOLVED_NO",
             
@@ -454,7 +455,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
         return get_faq_card(payload)
 
     # Yes resolution: close the chat
-    if payload == "RESOLVED_YES":
+    if payload == "RESOLVED_YES" or (text and text.lower().strip() == "yes"):
         await redis_manager.clear_session(user_id)
         return build_chat_response(
             text="Thank you! The chat has been closed. Say 'Hi' or 'Main Menu' to start a new chat.",
@@ -464,7 +465,7 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
         )
 
     # Trigger support ticket creation / Connect to Agent
-    if payload == "RESOLVED_NO" or text.lower() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support", "create support ticket"]:
+    if payload == "RESOLVED_NO" or (text and text.lower().strip() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support", "create support ticket"]):
         return build_chat_response(
             text="Click Below (Connect with live Agent)",
             buttons=[
