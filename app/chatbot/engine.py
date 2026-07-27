@@ -464,8 +464,18 @@ async def process_user_message(user_id: str, text: str, payload: str = None, sou
             ]
         )
 
-    # Trigger support ticket creation / Connect to Agent
-    if payload == "RESOLVED_NO" or (text and text.lower().strip() in ["create ticket", "ticket", "no", "still facing issue", "create ticket / talk to support", "create support ticket"]):
+    # Create support ticket in browser
+    if payload == "CREATE_SUPPORT_TICKET" or (text and text.lower().strip() in ["create ticket", "ticket", "create ticket / talk to support", "create support ticket"]):
+        return build_chat_response(
+            text=f"To open the support portal in your browser, please <link href='{settings.BOB_SUPPORT_URL}'>Click Here</link>.\n\nPlease let us know if you are satisfied with the resolution.",
+            buttons=[
+                {"title": "Yes", "payload": "RESOLVED_YES"},
+                {"title": "No", "payload": "RESOLVED_NO"}
+            ]
+        )
+
+    # Trigger Connect to Agent when dissatisfied (No)
+    if payload == "RESOLVED_NO" or (text and text.lower().strip() in ["no", "still facing issue"]):
         return build_chat_response(
             text="Click Below (Connect with live Agent)",
             buttons=[

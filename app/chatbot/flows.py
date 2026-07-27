@@ -12,7 +12,7 @@ MAIN_MENU = {
         {"title": "Annual Travel (ATS)", "payload": "FLOW_ATS"},
         {"title": "BOB Account Opening", "payload": "FLOW_LOANS_ACCTS"},
         {"title": "BOB Loan Apply Online", "payload": "FLOW_LOAN_APPLY"},
-        {"title": "Create Support Ticket", "payload": "RESOLVED_NO"},
+        {"title": "Create Support Ticket", "payload": "CREATE_SUPPORT_TICKET"},
     ]
 }
 
